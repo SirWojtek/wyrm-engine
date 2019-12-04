@@ -1,0 +1,8 @@
+{
+  "name": "wyrm-engine",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:SirWojtek/wyrm-engine.git",
+  "author": "SirWojtek",
+  "license": "MIT"
+}
