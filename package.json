@@ -8,9 +8,10 @@
   "author": "SirWojtek",
   "license": "MIT",
   "scripts": {
-    "build": "yarn build:ts && yarn build:rollup",
+    "build": "yarn build:ts && yarn build:rollup && yarn build:docs",
     "build:ts": "tsc --module commonjs",
     "build:rollup": "rollup -c rollup.config.js",
+    "build:docs": "typedoc --out docs --target es6 --theme minimal --mode file src",
     "start": "rollup -c rollup.config.js -w"
   },
   "devDependencies": {
@@ -25,6 +26,7 @@
     "rollup-plugin-sourcemaps": "^0.4.2",
     "rollup-plugin-typescript2": "^0.25.3",
     "tslint": "^5.20.1",
+    "typedoc": "^0.15.3",
     "typescript": "^3.7.3"
   },
   "lint-staged": {
