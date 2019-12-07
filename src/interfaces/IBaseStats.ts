@@ -1,8 +1,10 @@
+import { IDamage } from './IDamage';
+
 export interface IBaseStats {
-  damage: number;
+  damage: IDamage;
+  attackPower: number;
   hitRating: number;
   initiative: number;
   dodge: number;
   dmgReduction: number;
-  hp: number;
 }

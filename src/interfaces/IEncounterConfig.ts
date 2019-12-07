@@ -1,7 +1,7 @@
-import { IBaseCharacter } from './ICharacter';
+import { ICharacter } from './ICharacter';
 
 export interface IEncounterConfig {
   id: string;
-  teamA: IBaseCharacter[];
-  teamB: IBaseCharacter[];
+  teamA: ICharacter[];
+  teamB: ICharacter[];
 }

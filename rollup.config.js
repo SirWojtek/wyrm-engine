@@ -40,7 +40,8 @@ export default {
     commonjs({
       include: /node_modules/,
       namedExports: {
-        uuid: ['v4']
+        uuid: ['v4'],
+        lodash: ['random', 'sortBy', 'sumBy']
       }
     }),
 
