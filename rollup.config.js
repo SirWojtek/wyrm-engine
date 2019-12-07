@@ -41,7 +41,7 @@ export default {
       include: /node_modules/,
       namedExports: {
         uuid: ['v4'],
-        lodash: ['random', 'sortBy', 'sumBy']
+        lodash: ['random', 'sortBy', 'sumBy', 'remove', 'groupBy']
       }
     }),
 

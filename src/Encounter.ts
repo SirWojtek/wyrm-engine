@@ -1,19 +1,37 @@
-import { random, sortBy, sumBy } from 'lodash';
+import { groupBy, random, remove, sortBy, sumBy } from 'lodash';
+import { IAction } from './interfaces/IAction';
 import { ICharacter, TeamEnum } from './interfaces/ICharacter';
 import { IEncounterConfig } from './interfaces/IEncounterConfig';
-import { IAction } from './interfaces/index';
+import { IEcounterLog, LogEntryTypeEnum } from './interfaces/IEncounterLog';
+import {
+  deathMessage,
+  hitMessage,
+  hpMessage,
+  missMessage,
+  winMessage,
+} from './utils/log-messages';
 
 export class Encounter {
   roundActions: { [characterId: string]: IAction | undefined } = {};
+  encunterLog: IEcounterLog = [];
+  encounterRound = 1;
 
   constructor(private encounterConfig: IEncounterConfig) {}
 
-  tick() {
+  tick(): IEcounterLog {
+    const winLog = this.encunterLog.find(
+      l => l.entryType === LogEntryTypeEnum.Win,
+    );
+    if (winLog) {
+      return [];
+    }
+
+    const roundLog: IEcounterLog = [];
     const orderedCharacters = this.getRoundOrder();
 
     this.triggerAIActions();
 
-    orderedCharacters.forEach(character => {
+    orderedCharacters.forEach((character, _, orderedCharactersInner) => {
       const action = this.roundActions[character.id];
       if (!action) {
         return;
@@ -21,13 +39,45 @@ export class Encounter {
       const opponent = this.pickOpponent(character);
 
       if (!this.checkHit(character, opponent)) {
+        roundLog.push(
+          missMessage(character, opponent, action, this.encounterRound),
+        );
         return;
       }
 
-      this.applyAction(action, character, opponent);
+      const damageDone = this.getActionDamage(action, character, opponent);
+      opponent.currentHp -= damageDone;
+      roundLog.push(
+        hitMessage(character, opponent, action, damageDone, this.encounterRound),
+      );
+      roundLog.push(hpMessage(opponent, this.encounterRound));
+
+      const deadCharacters = orderedCharactersInner.filter(
+        ch => ch.currentHp <= 0,
+      );
+      roundLog.push(
+        ...deadCharacters.map(ch => deathMessage(ch, this.encounterRound)),
+      );
+      remove(orderedCharactersInner, orderedChar =>
+        deadCharacters.find(deadChar => deadChar.id === orderedChar.id),
+      );
+
+      const aliveCharacters = orderedCharactersInner.filter(
+        char => char.currentHp > 0,
+      );
+      const aliveByTeam = groupBy(aliveCharacters, char => char.team);
+      if (aliveByTeam[TeamEnum.teamA].length === 0) {
+        roundLog.push(winMessage(TeamEnum.teamB, this.encounterRound));
+      } else if (aliveByTeam[TeamEnum.teamB].length === 0) {
+        roundLog.push(winMessage(TeamEnum.teamA, this.encounterRound));
+      }
     });
 
+    this.encunterLog = [...this.encunterLog, ...roundLog];
     this.resetRoundActions();
+    this.encounterRound += 1;
+
+    return roundLog;
   }
 
   resetRoundActions() {
@@ -40,8 +90,8 @@ export class Encounter {
 
   private getRoundOrder(): ICharacter[] {
     let allCharacters = [
-      ...this.encounterConfig.teamA,
-      ...this.encounterConfig.teamB,
+      ...this.encounterConfig.teamA.filter(char => char.currentHp > 0),
+      ...this.encounterConfig.teamB.filter(char => char.currentHp > 0),
     ];
 
     const ordered: ICharacter[] = [];
@@ -108,11 +158,11 @@ export class Encounter {
     return randomNumber < attacker.baseStats.hitRating;
   }
 
-  private applyAction(
+  private getActionDamage(
     action: IAction,
     character: ICharacter,
     opponent: ICharacter,
-  ) {
+  ): number {
     const characterBaseStats = character.baseStats;
     const opponentBaseStats = opponent.baseStats;
     const baseDamage =
@@ -122,8 +172,6 @@ export class Encounter {
     const damageReductionFactor =
       characterBaseStats.attackPower / characterBaseStats.attackPower +
       opponentBaseStats.dmgReduction;
-    const actionDamage = damageReductionFactor * baseDamage;
-
-    opponent.currentHp -= actionDamage;
+    return damageReductionFactor * baseDamage;
   }
 }

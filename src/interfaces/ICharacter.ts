@@ -4,6 +4,7 @@ import { IStats } from './IStats';
 
 export interface IBaseCharacter {
   id: string;
+  name?: string;
   level: number;
   stats: IStats;
   currentHp: number;
