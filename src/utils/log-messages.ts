@@ -7,6 +7,28 @@ import {
 } from '../interfaces/IEncounterLog';
 import { IAction, ICharacter, TeamEnum } from '../interfaces/index';
 
+export function encounterSummaryMessage(
+  orderedCharacters: ICharacter[],
+  encounterRound: number,
+): IGeneralEncounterLogEntry {
+  const message = `Encounter summary:
+Round: ${encounterRound}
+Round order:
+  ${orderedCharacters.map(
+    char =>
+      `\t${char.name || char.id}\tteam: ${char.team}\tHP: ${char.currentHp}/${
+        char.maxHp
+      }\n`,
+  )}
+`;
+
+  return {
+    entryType: LogEntryTypeEnum.General,
+    message,
+    encounterRound,
+  };
+}
+
 export function hpMessage(
   character: ICharacter,
   encounterRound: number,

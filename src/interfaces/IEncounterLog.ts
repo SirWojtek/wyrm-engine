@@ -28,9 +28,10 @@ export interface IWinEncounterLogEntry extends IGeneralEncounterLogEntry {
   wictoryTeam: TeamEnum;
 }
 
-export type IEcounterLog = Array<
+export type IEncounterLogEntry =
   | IGeneralEncounterLogEntry
   | IActionEncounterLogEntry
   | IDeathEncounterLogEntry
-  | IWinEncounterLogEntry
->;
+  | IWinEncounterLogEntry;
+
+export type IEcounterLog = IEncounterLogEntry[];

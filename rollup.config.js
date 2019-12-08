@@ -29,7 +29,10 @@ export default {
     // Allow json resolution
     json(),
     // Compile TypeScript files
-    typescript({ useTsconfigDeclarationDir: true }),
+    typescript({
+      useTsconfigDeclarationDir: true,
+      tsconfig: 'tsconfig.rollup.json'
+    }),
     // Allow node_modules resolution, so you can use 'external' to control
     // which external modules to include in the bundle
     // https://github.com/rollup/rollup-plugin-node-resolve#usage
@@ -41,7 +44,15 @@ export default {
       include: /node_modules/,
       namedExports: {
         uuid: ['v4'],
-        lodash: ['random', 'sortBy', 'sumBy', 'remove', 'groupBy']
+        lodash: [
+          'random',
+          'sortBy',
+          'sumBy',
+          'remove',
+          'groupBy',
+          'merge',
+          'round'
+        ]
       }
     }),
 

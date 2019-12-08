@@ -8,6 +8,7 @@ export interface IBaseCharacter {
   level: number;
   stats: IStats;
   currentHp: number;
+  maxHp: number;
   actions: IAction[];
   controllerCallback?: (actions: IAction[]) => IAction | undefined;
 }

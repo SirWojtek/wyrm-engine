@@ -26,7 +26,15 @@ export class Engine {
     return new Encounter(config);
   }
 
+  getConfig(): IEngineConfig {
+    return this.engineConfig;
+  }
+
   private toCharacter(baseChar: IBaseCharacter, team: TeamEnum): ICharacter {
+    if (baseChar.currentHp <= 0) {
+      throw new Error('Character have 0 or less HP');
+    }
+
     const { stats } = baseChar;
     const { statsModifiers } = this.engineConfig;
 
