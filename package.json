@@ -9,10 +9,11 @@
   "license": "MIT",
   "scripts": {
     "build": "yarn build:ts && yarn build:rollup && yarn build:docs",
-    "build:ts": "tsc --module commonjs",
+    "build:ts": "tsc",
     "build:rollup": "rollup -c rollup.config.js",
     "build:docs": "typedoc --out docs --target es6 --theme minimal --mode file src",
-    "start": "rollup -c rollup.config.js -w"
+    "start": "rollup -c rollup.config.js -w",
+    "engine-analyzer": "ts-node ./tools/engine-analyzer.ts"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^6.0.0",
@@ -28,6 +29,7 @@
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-sourcemaps": "^0.4.2",
     "rollup-plugin-typescript2": "^0.25.3",
+    "ts-node": "^8.5.4",
     "tslint": "^5.20.1",
     "typedoc": "^0.15.3",
     "typescript": "^3.7.3"
