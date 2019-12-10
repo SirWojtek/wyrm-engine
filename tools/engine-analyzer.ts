@@ -19,30 +19,32 @@ function pickFirstActionStrategy(actions: IAction[]): IAction | undefined {
   return actions[0];
 }
 
-function getWinnerTeam(engine: Engine): TeamEnum {
+function getResults(engine: Engine): { winner: TeamEnum; roundCount: number } {
   const characterCreator = new CharacterCreator(engine.getConfig());
 
-  const strongKyle = characterCreator.strongCharacter({
-    name: 'Strong Kyle',
+  const kyle = characterCreator.strongCharacter({
+    name: 'Kyle',
     level: 5,
     damage: { min: 10, max: 12 },
     armor: 20,
     controllerCallback: pickFirstActionStrategy,
   });
 
-  const strongJenny = characterCreator.strongCharacter({
-    name: 'Strong Jenny',
+  const jenny = characterCreator.toughtCharacter({
+    name: 'Jenny',
     level: 5,
     damage: { min: 10, max: 12 },
     armor: 20,
     controllerCallback: pickFirstActionStrategy,
   });
 
-  const encounter = engine.createEncounter([strongKyle], [strongJenny]);
+  const encounter = engine.createEncounter([kyle], [jenny]);
 
   while (encounter.tick()) {
     // noop
   }
+
+  encounter.getEncounterLog().forEach(l => console.log(l.message));
 
   const winner = encounter
     .getEncounterLog()
@@ -50,19 +52,23 @@ function getWinnerTeam(engine: Engine): TeamEnum {
   if (!winner) {
     throw new Error('Cannot find win message');
   }
-  return winner.wictoryTeam;
+  return { winner: winner.wictoryTeam, roundCount: winner.encounterRound };
 }
 
 const wyrmEngine = createEngine();
 
 let winnerA = 0;
-const encounters = 10000;
+let rounds = 0;
+const encounters = 1000;
 
 for (let i = 0; i < encounters; i++) {
-  console.log(`Simulation round ${i + 1}`);
-  if (getWinnerTeam(wyrmEngine) === TeamEnum.teamA) {
+  const results = getResults(wyrmEngine);
+  rounds += results.roundCount;
+  if (results.winner === TeamEnum.teamA) {
     winnerA++;
   }
 }
 
+console.log('=============================================');
 console.log(`Win team ratio: ${winnerA / encounters}`);
+console.log(`Avg rounds: ${rounds / encounters}`);

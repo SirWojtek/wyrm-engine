@@ -11,16 +11,15 @@ export function encounterSummaryMessage(
   orderedCharacters: ICharacter[],
   encounterRound: number,
 ): IGeneralEncounterLogEntry {
-  const message = `Encounter summary:
+  const message = `=== Encounter summary ===
 Round: ${encounterRound}
-Round order:
-  ${orderedCharacters.map(
-    char =>
-      `\t${char.name || char.id}\tteam: ${char.team}\tHP: ${char.currentHp}/${
-        char.maxHp
-      }\n`,
-  )}
-`;
+Round order: ${orderedCharacters.reduce(
+    (res, char) =>
+      (res += `\n\t${char.name || char.id}\t${char.team}\tHP: ${
+        char.currentHp
+      }/${char.maxHp}`),
+    '',
+  )}`;
 
   return {
     entryType: LogEntryTypeEnum.General,
@@ -50,8 +49,8 @@ export function missMessage(
   action: IAction,
   encounterRound: number,
 ): IActionEncounterLogEntry {
-  const message = `${attacker.name || attacker.id} attack (${action.name ||
-    action.id}) missed ${defender.name || defender.id}`;
+  const message = `${attacker.name || attacker.id}'s ${action.name ||
+    action.id} misses ${defender.name || defender.id}`;
 
   return {
     entryType: LogEntryTypeEnum.Action,
@@ -70,8 +69,8 @@ export function hitMessage(
   damageDone: number,
   encounterRound: number,
 ): IActionEncounterLogEntry {
-  const message = `${attacker.name || attacker.id} attack (${action.name ||
-    action.id}) hit ${defender.name || defender.id} for ${damageDone}`;
+  const message = `${attacker.name || attacker.id}'s ${action.name ||
+    action.id} hits ${defender.name || defender.id} for ${damageDone}`;
 
   return {
     entryType: LogEntryTypeEnum.Action,

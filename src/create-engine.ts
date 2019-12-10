@@ -10,9 +10,9 @@ const DEFAULT_CONFIG: IEngineConfig = {
     hitRating: 1,
     initiative: 1,
     dodge: 1,
-    dmgReduction: 1,
+    dmgReduction: 0.3,
   },
-  maxHpModifier: 5,
+  maxHpModifier: 2,
 };
 
 export function createEngine(engineConfig?: Partial<IEngineConfig>): Engine {
