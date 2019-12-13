@@ -41,6 +41,7 @@ export class Engine {
     const baseStats: IBaseStats = {
       damage: stats.damage,
       attackPower: statsModifiers.attackPower * stats.power,
+      armorPenetration: statsModifiers.armorPenetration * stats.power,
       hitRating: statsModifiers.hitRating * stats.dexterity,
       initiative: statsModifiers.initiative * stats.dexterity,
       dodge: statsModifiers.dodge * stats.dexterity,

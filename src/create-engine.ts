@@ -6,13 +6,22 @@ const DEFAULT_CONFIG: IEngineConfig = {
   statPointsPerLevel: 5,
   statsModifiers: {
     damage: 1,
-    attackPower: 1,
+    attackPower: 1.2,
+    armorPenetration: 1,
     hitRating: 1,
     initiative: 1,
     dodge: 1,
-    dmgReduction: 0.3,
+    dmgReduction: 1,
   },
-  maxHpModifier: 2,
+  maxHpModifier: 5,
+  damageConfig: {
+    startDamage: 10,
+    damagePerLevel: 2,
+  },
+  armorConfig: {
+    startArmor: 20,
+    armorPerLevel: 10,
+  },
 };
 
 export function createEngine(engineConfig?: Partial<IEngineConfig>): Engine {

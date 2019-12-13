@@ -18,10 +18,13 @@
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^6.0.0",
     "@types/lodash": "^4.14.149",
+    "@types/mustache": "^0.8.32",
     "@types/uuid": "^3.4.6",
+    "fs": "^0.0.1-security",
     "husky": "^3.1.0",
     "lint-staged": "^9.5.0",
     "lodash.camelcase": "^4.3.0",
+    "mustache": "^3.1.0",
     "prettier": "^1.19.1",
     "rollup": "^1.27.8",
     "rollup-plugin-commonjs": "^10.1.0",

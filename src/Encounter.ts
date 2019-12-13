@@ -194,10 +194,12 @@ export class Encounter {
         random(characterBaseStats.damage.min, characterBaseStats.damage.max) +
       action.damageModifiers.addFactor;
     const damageReductionFactor =
-      characterBaseStats.attackPower /
-      (characterBaseStats.attackPower + opponentBaseStats.dmgReduction);
+      characterBaseStats.armorPenetration /
+      (characterBaseStats.armorPenetration + opponentBaseStats.dmgReduction);
 
-    return round(damageReductionFactor * baseDamage);
+    return round(
+      damageReductionFactor * baseDamage + characterBaseStats.attackPower,
+    );
   }
 
   private addToLog(log: IEcounterLog, entry: IEncounterLogEntry) {
