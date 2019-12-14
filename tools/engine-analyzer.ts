@@ -8,7 +8,7 @@ import {
 } from '../src/CharacterCreator';
 import { createEngine } from '../src/create-engine';
 
-import { range } from 'lodash';
+import { flatten, range } from 'lodash';
 import { Engine } from '../src/Engine';
 import {
   IAction,
@@ -86,7 +86,8 @@ function simulate(
 
 function simulateLoop(
   engine: Engine,
-  level: number,
+  firstLevel: number,
+  secondLevel: number,
   firstCharType: CharacterTypeEnum,
   firstCharSubtype: CharacterSubtypeEnum,
   secondCharType: CharacterTypeEnum,
@@ -96,11 +97,13 @@ function simulateLoop(
   let winnerA = 0;
   let rounds = 0;
 
-  console.log(`simulateLoop:\tlevel: ${level}\tcount:${count}`);
+  // console.log(
+  // `simulateLoop:\tlevel: ${firstLevel} vs. ${secondLevel}\tcount:${count}`,
+  // );
 
   const kyle = {
     name: 'Kyle',
-    level,
+    level: firstLevel,
     type: firstCharType,
     subtype: firstCharSubtype,
     overrideCharacter: {
@@ -109,7 +112,7 @@ function simulateLoop(
   };
   const jenny = {
     name: 'Jenny',
-    level,
+    level: secondLevel,
     type: secondCharType,
     subtype: secondCharSubtype,
     overrideCharacter: {
@@ -130,19 +133,20 @@ function simulateLoop(
 
 function generateChart(
   outputFilePath: string,
-  data: { winData: number[][]; roundsData: number[][] },
+  chartDef: {
+    data: Array<Array<string | number>>;
+    title: string;
+    hMinValue: number;
+    hMaxValue: number;
+  },
 ) {
-  const winData = data.winData.reduce(
-    (res, point) => (res += JSON.stringify(point) + ','),
-    '',
-  );
-  const roundsData = data.roundsData.reduce(
-    (res, point) => (res += JSON.stringify(point) + ','),
-    '',
-  );
+  const data = JSON.stringify(chartDef.data);
+  const title = JSON.stringify(chartDef.title);
+  const hMinValue = chartDef.hMinValue;
+  const hMaxValue = chartDef.hMaxValue;
 
   const template = readFileSync('./tools/line-chart.mustache').toString();
-  const output = render(template, { winData, roundsData });
+  const output = render(template, { data, title, hMinValue, hMaxValue });
   writeFileSync(outputFilePath, output);
 }
 
@@ -168,23 +172,28 @@ const wyrmEngine = createEngine({
   },
 });
 
-const typeCombinations: CharacterTypeEnum[][] = combinations(
+const typeCombinations: CharacterTypeEnum[][] = variations(
   Object.values(CharacterTypeEnum),
 );
 const subtypeCombinations: CharacterSubtypeEnum[][] = variations(
   Object.values(CharacterSubtypeEnum),
 );
 
+const titleRow: string[] = ['Level'];
 typeCombinations.forEach(typeCombination =>
-  subtypeCombinations.forEach(subtypeCombination => {
-    console.log(
-      `Simulating ${typeCombination[0]}_${subtypeCombination[0]} vs ${typeCombination[1]}_${subtypeCombination[1]}`,
-    );
+  subtypeCombinations.forEach(subtypeCombination =>
+    titleRow.push(
+      `${typeCombination[0]}_${subtypeCombination[0]} vs. ${typeCombination[1]}_${subtypeCombination[1]}`,
+    ),
+  ),
+);
 
-    const data = range(1, 61).map(lvl => ({
-      lvl,
-      data: simulateLoop(
+const levelAndSimulationData = range(1, 61).map(lvl => {
+  const simulationData = typeCombinations.map(typeCombination =>
+    subtypeCombinations.map(subtypeCombination =>
+      simulateLoop(
         wyrmEngine,
+        lvl,
         lvl,
         typeCombination[0],
         subtypeCombination[0],
@@ -192,17 +201,42 @@ typeCombinations.forEach(typeCombination =>
         subtypeCombination[1],
         1000,
       ),
-    }));
+    ),
+  );
 
-    const winRatioData = data.map(point => [point.lvl, point.data.winRatio]);
-    const avgRoundsData = data.map(point => [point.lvl, point.data.avgRounds]);
+  return { lvl, simulationData };
+});
 
-    generateChart(
-      `./out/${typeCombination[0]}_${subtypeCombination[0]}_vs_${typeCombination[1]}_${subtypeCombination[1]}.html`,
-      {
-        winData: winRatioData,
-        roundsData: avgRoundsData,
-      },
-    );
+const winRatioData = [
+  titleRow,
+  ...levelAndSimulationData.map(levelAndData => {
+    const flattenData = flatten(levelAndData.simulationData);
+    const winRatio = flattenData.map(d => d.winRatio);
+
+    return [levelAndData.lvl, ...winRatio];
   }),
-);
+];
+
+generateChart(`./out/win_ratio.html`, {
+  title: 'Win ratio for level',
+  data: winRatioData,
+  hMinValue: 0,
+  hMaxValue: 1,
+});
+
+const avgRoundsData = [
+  titleRow,
+  ...levelAndSimulationData.map(levelAndData => {
+    const flattenData = flatten(levelAndData.simulationData);
+    const avgRounds = flattenData.map(d => d.avgRounds);
+
+    return [levelAndData.lvl, ...avgRounds];
+  }),
+];
+
+generateChart(`./out/avg_rounds.html`, {
+  title: 'Avg. rounds for level',
+  data: avgRoundsData,
+  hMinValue: 0,
+  hMaxValue: 10,
+});
