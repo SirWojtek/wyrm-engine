@@ -28,7 +28,7 @@ const wyrmEngine = createEngine({
   statPointsPerLevel: 3,
   statsModifiers: {
     damage: 1,
-    attackPower: 1.2,
+    attackPower: 1.5,
     armorPenetration: 1,
     hitRating: 1,
     initiative: 1,
@@ -42,7 +42,7 @@ const wyrmEngine = createEngine({
   },
   armorConfig: {
     startArmor: 20,
-    armorPerLevel: 1,
+    armorPerLevel: 3,
   },
 });
 
@@ -57,7 +57,7 @@ const winRatioData: number[][] = range(1, 61).map(firstLevel =>
         CharacterSubtypeEnum.Balanced,
         CharacterTypeEnum.Strong,
         CharacterSubtypeEnum.Balanced,
-        1000,
+        100,
       ).winRatio,
   ),
 );

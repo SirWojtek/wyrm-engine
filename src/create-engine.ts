@@ -3,10 +3,10 @@ import { Engine } from './Engine';
 import { IEngineConfig } from './interfaces/IEngineConfig';
 
 const DEFAULT_CONFIG: IEngineConfig = {
-  statPointsPerLevel: 5,
+  statPointsPerLevel: 3,
   statsModifiers: {
     damage: 1,
-    attackPower: 1.2,
+    attackPower: 1.5,
     armorPenetration: 1,
     hitRating: 1,
     initiative: 1,
@@ -16,11 +16,11 @@ const DEFAULT_CONFIG: IEngineConfig = {
   maxHpModifier: 5,
   damageConfig: {
     startDamage: 10,
-    damagePerLevel: 2,
+    damagePerLevel: 1,
   },
   armorConfig: {
     startArmor: 20,
-    armorPerLevel: 10,
+    armorPerLevel: 3,
   },
 };
 

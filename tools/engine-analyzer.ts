@@ -31,10 +31,10 @@ function generateChart(
 }
 
 const wyrmEngine = createEngine({
-  statPointsPerLevel: 5,
+  statPointsPerLevel: 3,
   statsModifiers: {
     damage: 1,
-    attackPower: 1.2,
+    attackPower: 1.5,
     armorPenetration: 1,
     hitRating: 1,
     initiative: 1,
@@ -44,11 +44,11 @@ const wyrmEngine = createEngine({
   maxHpModifier: 5,
   damageConfig: {
     startDamage: 10,
-    damagePerLevel: 2,
+    damagePerLevel: 1,
   },
   armorConfig: {
     startArmor: 20,
-    armorPerLevel: 10,
+    armorPerLevel: 3,
   },
 });
 
@@ -79,7 +79,7 @@ const levelAndSimulationData = range(1, 61).map(lvl => {
         subtypeCombination[0],
         typeCombination[1],
         subtypeCombination[1],
-        1000,
+        100,
       ),
     ),
   );
