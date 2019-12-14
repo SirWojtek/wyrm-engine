@@ -1,0 +1,25 @@
+<!DOCTYPE HTML PUBLIC
+     "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  </head>
+
+  <body>
+    <div id="chart"></div>
+    <script type="text/javascript">
+      var data = [{
+	z: {{{ data }}},
+        type: 'surface'
+      }];
+
+      var layout = {
+	title: {{{ title }}},
+	autosize: false,
+	width: 1800,
+	height: 900
+      };
+      Plotly.newPlot('chart', data, layout);
+   </script>
+  </body>
+</html>
