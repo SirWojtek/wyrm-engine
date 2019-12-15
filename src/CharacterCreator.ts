@@ -76,12 +76,10 @@ export class CharacterCreator {
     data: ICharacterData,
     modifiers: StatModifiers,
   ): IBaseCharacter {
-    const { maxHpModifier, armorConfig } = this.engineConfig;
+    const { maxHpModifier } = this.engineConfig;
     const maxDamage = this.getMaxDamage(data.level, data.subtype);
     const minDamage = round(maxDamage * this.minDamageModifier);
-    const armor = round(
-      armorConfig.startArmor + data.level * armorConfig.armorPerLevel,
-    );
+    const armor = this.getArmor(data.level, data.subtype);
     const statsSum = data.level * this.engineConfig.statPointsPerLevel;
 
     const stats: IStats = {
@@ -118,6 +116,24 @@ export class CharacterCreator {
         return round(this.subtypeModifiers.normal * baseDmg);
       case CharacterSubtypeEnum.Defender:
         return round(this.subtypeModifiers.bad * baseDmg);
+      default:
+        throw Error('Unknown enum value');
+    }
+  }
+
+  private getArmor(level: number, subtype: CharacterSubtypeEnum): number {
+    const { armorConfig } = this.engineConfig;
+    const baseArmor = round(
+      armorConfig.startArmor + level * armorConfig.armorPerLevel,
+    );
+
+    switch (subtype) {
+      case CharacterSubtypeEnum.Attacker:
+        return round(this.subtypeModifiers.bad * baseArmor);
+      case CharacterSubtypeEnum.Balanced:
+        return round(this.subtypeModifiers.normal * baseArmor);
+      case CharacterSubtypeEnum.Defender:
+        return round(this.subtypeModifiers.good * baseArmor);
       default:
         throw Error('Unknown enum value');
     }

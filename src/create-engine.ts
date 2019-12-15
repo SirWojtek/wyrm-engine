@@ -2,7 +2,7 @@ import { merge } from 'lodash';
 import { Engine } from './Engine';
 import { IEngineConfig } from './interfaces/IEngineConfig';
 
-const DEFAULT_CONFIG: IEngineConfig = {
+export const DEFAULT_CONFIG: IEngineConfig = {
   statPointsPerLevel: 3,
   statsModifiers: {
     damage: 1,

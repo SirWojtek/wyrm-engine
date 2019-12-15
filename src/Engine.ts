@@ -1,5 +1,6 @@
 import { v4 as uuid } from 'uuid';
 
+import { CharacterCreator } from './CharacterCreator';
 import { Encounter } from './Encounter';
 import { IBaseStats } from './interfaces/IBaseStats';
 import { IBaseCharacter, ICharacter, TeamEnum } from './interfaces/ICharacter';
@@ -7,9 +8,15 @@ import { IEncounterConfig } from './interfaces/IEncounterConfig';
 import { IEngineConfig } from './interfaces/IEngineConfig';
 
 export class Engine {
+  private characterCreator = new CharacterCreator(this.engineConfig);
+
   constructor(private engineConfig: IEngineConfig) {}
 
   createEncounter(teamA: IBaseCharacter[], teamB: IBaseCharacter[]): Encounter {
+    if (!teamA.length || !teamB.length) {
+      throw Error('At least one of team is empty');
+    }
+
     const encounterTeamA: ICharacter[] = teamA.map(c =>
       this.toCharacter(c, TeamEnum.teamA),
     );
@@ -28,6 +35,10 @@ export class Engine {
 
   getConfig(): IEngineConfig {
     return this.engineConfig;
+  }
+
+  getCharacterCreator(): CharacterCreator {
+    return this.characterCreator;
   }
 
   private toCharacter(baseChar: IBaseCharacter, team: TeamEnum): ICharacter {
