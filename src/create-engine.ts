@@ -10,7 +10,7 @@ export const DEFAULT_CONFIG: IEngineConfig = {
     armorPenetration: 1,
     hitRating: 1,
     initiative: 1,
-    dodge: 1,
+    dodge: 0.7,
     dmgReduction: 1,
   },
   maxHpModifier: 5,
