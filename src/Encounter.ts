@@ -159,12 +159,14 @@ export class Encounter {
   }
 
   private triggerAIActions() {
-    [...this.encounterConfig.teamA, ...this.encounterConfig.teamB].forEach(
-      aiCharacter =>
-        (this.roundActions[aiCharacter.id] =
-          aiCharacter.controllerCallback &&
-          aiCharacter.controllerCallback(aiCharacter.actions)),
-    );
+    [...this.encounterConfig.teamA, ...this.encounterConfig.teamB]
+      .filter(character => !!character.controllerCallback)
+      .forEach(
+        aiCharacter =>
+          (this.roundActions[aiCharacter.id] =
+            aiCharacter.controllerCallback &&
+            aiCharacter.controllerCallback(aiCharacter.actions)),
+      );
   }
 
   private pickOpponent(character: ICharacter): ICharacter {
