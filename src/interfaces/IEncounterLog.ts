@@ -14,6 +14,10 @@ export interface IGeneralEncounterLogEntry {
   message: string;
 }
 
+export interface IEncounterSummaryLogEntry extends IGeneralEncounterLogEntry {
+  orderedCharacters: ICharacter[];
+}
+
 export interface IActionEncounterLogEntry extends IGeneralEncounterLogEntry {
   action: IAction;
   missed: boolean;

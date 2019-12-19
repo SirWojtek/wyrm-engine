@@ -1,6 +1,7 @@
 import {
   IActionEncounterLogEntry,
   IDeathEncounterLogEntry,
+  IEncounterSummaryLogEntry,
   IGeneralEncounterLogEntry,
   IWinEncounterLogEntry,
   LogEntryTypeEnum,
@@ -10,7 +11,7 @@ import { IAction, ICharacter, TeamEnum } from '../interfaces/index';
 export function encounterSummaryMessage(
   orderedCharacters: ICharacter[],
   encounterRound: number,
-): IGeneralEncounterLogEntry {
+): IEncounterSummaryLogEntry {
   const message = `=== Encounter summary ===
 Round: ${encounterRound}
 Round order: ${orderedCharacters.reduce(
@@ -25,6 +26,7 @@ Round order: ${orderedCharacters.reduce(
     entryType: LogEntryTypeEnum.General,
     message,
     encounterRound,
+    orderedCharacters,
   };
 }
 
