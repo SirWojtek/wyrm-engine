@@ -19,6 +19,8 @@ export interface IEncounterSummaryLogEntry extends IGeneralEncounterLogEntry {
 }
 
 export interface IActionEncounterLogEntry extends IGeneralEncounterLogEntry {
+  attacker: ICharacter;
+  defender: ICharacter;
   action: IAction;
   missed: boolean;
   damageDone: number;

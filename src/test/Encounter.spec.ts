@@ -1,61 +1,31 @@
-import { countBy, range } from 'lodash';
-import {
-  CharacterCreator,
-  CharacterSubtypeEnum,
-  CharacterTypeEnum,
-  ICharacterData,
-} from '../CharacterCreator';
+import { countBy, flatMap, groupBy } from 'lodash';
+import { CharacterTypeEnum, ICharacterData } from '../CharacterCreator';
 import { Engine } from '../Engine';
 import {
   createEngine,
   Encounter,
+  IActionEncounterLogEntry,
   IBaseCharacter,
-  ICharacter,
   IDeathEncounterLogEntry,
   IEncounterSummaryLogEntry,
-  IGeneralEncounterLogEntry,
   IWinEncounterLogEntry,
   LogEntryTypeEnum,
   TeamEnum,
 } from '../wyrm-engine';
-
-const DEFAULT_CHARACTER_CONFIG: ICharacterData = {
-  name: 'Unknown',
-  level: 10,
-  type: CharacterTypeEnum.Strong,
-  subtype: CharacterSubtypeEnum.Balanced,
-};
+import {
+  createEncounter,
+  simulateEncounters,
+  simulateEncounterSingleRound,
+} from './utils/encounter-helper';
 
 const TEST_ITERATIONS = 100;
 
 describe('Encounter', () => {
   let engine: Engine;
-  let characterCreator: CharacterCreator;
 
   beforeEach(() => {
     engine = createEngine();
-    characterCreator = engine.getCharacterCreator();
   });
-
-  function createEncounter(
-    template1: Partial<ICharacterData>,
-    template2: Partial<ICharacterData>,
-  ) {
-    const character1 = characterCreator.createCharacter({
-      ...DEFAULT_CHARACTER_CONFIG,
-      ...template1,
-    });
-    const character2 = characterCreator.createCharacter({
-      ...DEFAULT_CHARACTER_CONFIG,
-      ...template2,
-    });
-
-    return {
-      encounter: engine.createEncounter([character1], [character2]),
-      character1,
-      character2,
-    };
-  }
 
   describe('actions', () => {
     let encounter: Encounter;
@@ -64,6 +34,7 @@ describe('Encounter', () => {
 
     beforeEach(() => {
       const encounterData = createEncounter(
+        engine,
         { name: 'Kyle' },
         { name: 'Jenny' },
       );
@@ -107,6 +78,7 @@ describe('Encounter', () => {
 
     test('AI character with action set won', () => {
       const encounterData = createEncounter(
+        engine,
         {
           name: 'Kyle',
           overrideCharacter: { controllerCallback: actions => actions[0] },
@@ -140,31 +112,185 @@ describe('Encounter', () => {
     });
   });
 
-  describe('order', () => {
-    test('swift characters are first more often', () => {
-      const swiftCharacterName = 'Jenny';
-      const otherCharacterName = 'Kyle';
-      const { encounter } = createEncounter(
-        { name: otherCharacterName },
-        { name: swiftCharacterName, type: CharacterTypeEnum.Swift },
+  describe('swift characters', () => {
+    let jenny: Partial<ICharacterData>;
+    let kyle: Partial<ICharacterData>;
+
+    beforeEach(() => {
+      kyle = {
+        name: 'Kyle',
+        overrideCharacter: { controllerCallback: actions => actions[0] },
+      };
+      jenny = {
+        name: 'Jenny',
+        type: CharacterTypeEnum.Swift,
+        overrideCharacter: { controllerCallback: actions => actions[0] },
+      };
+    });
+
+    test('first more often', () => {
+      const messages = simulateEncounterSingleRound(
+        engine,
+        TEST_ITERATIONS,
+        kyle,
+        jenny,
       );
 
-      range(TEST_ITERATIONS).forEach(() => encounter.tick());
-
-      const roundOrderMessages = encounter
-        .getEncounterLog()
-        .filter(
-          log => (log as IEncounterSummaryLogEntry).orderedCharacters,
-        ) as IEncounterSummaryLogEntry[];
+      const roundOrderMessages = messages.filter(
+        log => (log as IEncounterSummaryLogEntry).orderedCharacters,
+      ) as IEncounterSummaryLogEntry[];
       const countedFirstCharacters = countBy(
         roundOrderMessages,
         log => log.orderedCharacters[0].name,
       );
 
-      expect(countedFirstCharacters[otherCharacterName]).toBeGreaterThan(0);
-      expect(countedFirstCharacters[swiftCharacterName]).toBeGreaterThan(
-        countedFirstCharacters[otherCharacterName],
+      expect(countedFirstCharacters[kyle.name || '']).toBeGreaterThan(0);
+      expect(countedFirstCharacters[jenny.name || '']).toBeGreaterThan(
+        countedFirstCharacters[kyle.name || ''],
       );
     });
+
+    test('hits more often', () => {
+      const messages = simulateEncounterSingleRound(
+        engine,
+        TEST_ITERATIONS,
+        kyle,
+        jenny,
+      );
+
+      const notMissedMessages = messages
+        .filter(log => log.entryType === LogEntryTypeEnum.Action)
+        .filter(
+          log => !(log as IActionEncounterLogEntry).missed,
+        ) as IActionEncounterLogEntry[];
+      const countedNotMissed = countBy(
+        notMissedMessages,
+        log => log.attacker.name,
+      );
+
+      expect(countedNotMissed[kyle.name || '']).toBeGreaterThan(0);
+      expect(countedNotMissed[jenny.name || '']).toBeGreaterThan(
+        countedNotMissed[kyle.name || ''],
+      );
+    });
+
+    test('dodges more often', () => {
+      const messages = simulateEncounterSingleRound(
+        engine,
+        TEST_ITERATIONS,
+        kyle,
+        jenny,
+      );
+
+      const missedMessages = messages
+        .filter(log => log.entryType === LogEntryTypeEnum.Action)
+        .filter(
+          log => (log as IActionEncounterLogEntry).missed,
+        ) as IActionEncounterLogEntry[];
+      const countedMissed = countBy(missedMessages, log => log.defender.name);
+
+      expect(countedMissed[kyle.name || '']).toBeGreaterThan(0);
+      expect(countedMissed[jenny.name || '']).toBeGreaterThan(
+        countedMissed[kyle.name || ''],
+      );
+    });
+  });
+
+  describe('strong characters', () => {
+    let jenny: Partial<ICharacterData>;
+    let kyle: Partial<ICharacterData>;
+
+    beforeEach(() => {
+      kyle = {
+        name: 'Kyle',
+        type: CharacterTypeEnum.Strong,
+        overrideCharacter: { controllerCallback: actions => actions[0] },
+      };
+      jenny = {
+        name: 'Jenny',
+        type: CharacterTypeEnum.Tought,
+        overrideCharacter: { controllerCallback: actions => actions[0] },
+      };
+    });
+
+    test('do more damage', () => {
+      const messages = simulateEncounterSingleRound(
+        engine,
+        TEST_ITERATIONS,
+        kyle,
+        jenny,
+      );
+
+      const notMissedMessages = messages
+        .filter(log => log.entryType === LogEntryTypeEnum.Action)
+        .filter(
+          log => !(log as IActionEncounterLogEntry).missed,
+        ) as IActionEncounterLogEntry[];
+      const actionsGroupedByAttacker = groupBy(
+        notMissedMessages,
+        log => log.attacker.name,
+      );
+
+      const kyleDamageSum = actionsGroupedByAttacker[kyle.name || ''].reduce(
+        (res, log) => (res += log.damageDone),
+        0,
+      );
+      const jennyDamageSum = actionsGroupedByAttacker[jenny.name || ''].reduce(
+        (res, log) => (res += log.damageDone),
+        0,
+      );
+
+      expect(kyleDamageSum).toBeGreaterThan(0);
+      expect(jennyDamageSum).toBeGreaterThan(0);
+      expect(kyleDamageSum).toBeGreaterThan(jennyDamageSum);
+    });
+  });
+
+  describe('tought characters', () => {
+    let jenny: Partial<ICharacterData>;
+    let kyle: Partial<ICharacterData>;
+
+    beforeEach(() => {
+      kyle = {
+        name: 'Kyle',
+        type: CharacterTypeEnum.Tought,
+      };
+      jenny = {
+        name: 'Jenny',
+        type: CharacterTypeEnum.Strong,
+      };
+    });
+
+    test('have more hp', () => {
+      const { character1, character2 } = createEncounter(engine, kyle, jenny);
+
+      expect(character1.maxHp).toBeGreaterThan(0);
+      expect(character2.maxHp).toBeGreaterThan(0);
+      expect(character1.maxHp).toBeGreaterThan(character2.maxHp);
+    });
+  });
+
+  test('same characters win ratio', () => {
+    const iterations = 10000;
+
+    const mergedLog = flatMap(
+      simulateEncounters(
+        engine,
+        iterations,
+        { name: 'Kyle', overrideCharacter: { controllerCallback: a => a[0] } },
+        { name: 'Jenny', overrideCharacter: { controllerCallback: a => a[0] } },
+      ),
+    );
+    const winMessages = (mergedLog.filter(
+      log => log.entryType === LogEntryTypeEnum.Win,
+    ) as unknown) as IWinEncounterLogEntry[];
+
+    const countedByTeam = countBy(winMessages, log => log.wictoryTeam);
+    expect(
+      countedByTeam[TeamEnum.teamA] + countedByTeam[TeamEnum.teamB],
+    ).toEqual(iterations);
+    expect(
+      countedByTeam[TeamEnum.teamA] / countedByTeam[TeamEnum.teamB],
+    ).toBeCloseTo(1, 1);
   });
 });
