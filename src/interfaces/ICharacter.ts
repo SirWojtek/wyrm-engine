@@ -1,8 +1,7 @@
 import { IAction } from './IAction';
-import { IBaseStats } from './IBaseStats';
 import { IStats } from './IStats';
 
-export interface IBaseCharacter {
+export interface ICharacter {
   id: string;
   name?: string;
   level: number;
@@ -11,14 +10,4 @@ export interface IBaseCharacter {
   maxHp: number;
   actions: IAction[];
   controllerCallback?: (actions: IAction[]) => IAction | undefined;
-}
-
-export enum TeamEnum {
-  teamA = 'teamA',
-  teamB = 'teamB',
-}
-
-export interface ICharacter extends IBaseCharacter {
-  baseStats: IBaseStats;
-  team: TeamEnum;
 }

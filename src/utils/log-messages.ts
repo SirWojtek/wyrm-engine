@@ -1,3 +1,4 @@
+import { IAction } from '../interfaces/IAction';
 import {
   IActionEncounterLogEntry,
   IDeathEncounterLogEntry,
@@ -6,10 +7,11 @@ import {
   IWinEncounterLogEntry,
   LogEntryTypeEnum,
 } from '../interfaces/IEncounterLog';
-import { IAction, ICharacter, TeamEnum } from '../interfaces/index';
+import { IEngineCharacter } from '../interfaces/IEngineCharacter';
+import { TeamEnum } from '../interfaces/TeamEnum';
 
 export function encounterSummaryMessage(
-  orderedCharacters: ICharacter[],
+  orderedCharacters: IEngineCharacter[],
   encounterRound: number,
 ): IEncounterSummaryLogEntry {
   const message = `=== Encounter summary ===
@@ -31,7 +33,7 @@ Round order: ${orderedCharacters.reduce(
 }
 
 export function hpMessage(
-  character: ICharacter,
+  character: IEngineCharacter,
   encounterRound: number,
 ): IGeneralEncounterLogEntry {
   const message = `${character.name || character.id} current hp: ${
@@ -46,8 +48,8 @@ export function hpMessage(
 }
 
 export function missMessage(
-  attacker: ICharacter,
-  defender: ICharacter,
+  attacker: IEngineCharacter,
+  defender: IEngineCharacter,
   action: IAction,
   encounterRound: number,
 ): IActionEncounterLogEntry {
@@ -67,8 +69,8 @@ export function missMessage(
 }
 
 export function hitMessage(
-  attacker: ICharacter,
-  defender: ICharacter,
+  attacker: IEngineCharacter,
+  defender: IEngineCharacter,
   action: IAction,
   damageDone: number,
   encounterRound: number,
@@ -89,7 +91,7 @@ export function hitMessage(
 }
 
 export function deathMessage(
-  killed: ICharacter,
+  killed: IEngineCharacter,
   encounterRound: number,
 ): IDeathEncounterLogEntry {
   const message = `${killed.name || killed.id} is dead!`;

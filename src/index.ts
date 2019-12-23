@@ -1,5 +1,5 @@
 export * from './interfaces/index';
 
-export * from './Engine';
+export * from './WyrmEngine';
 export * from './Encounter';
 export * from './create-engine';

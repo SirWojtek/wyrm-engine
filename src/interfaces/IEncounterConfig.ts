@@ -1,9 +1,9 @@
-import { ICharacter } from './ICharacter';
 import { IEncounterLogEntry } from './IEncounterLog';
+import { IEngineCharacter } from './IEngineCharacter';
 
 export interface IEncounterConfig {
   id: string;
-  teamA: ICharacter[];
-  teamB: ICharacter[];
+  teamA: IEngineCharacter[];
+  teamB: IEngineCharacter[];
   logMessageCallback?: (messsage: IEncounterLogEntry) => void;
 }

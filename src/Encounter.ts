@@ -1,12 +1,13 @@
 import { groupBy, random, remove, round, sortBy, sumBy } from 'lodash';
+import { IEngineCharacter } from '.';
 import { IAction } from './interfaces/IAction';
-import { ICharacter, TeamEnum } from './interfaces/ICharacter';
 import { IEncounterConfig } from './interfaces/IEncounterConfig';
 import {
   IEcounterLog,
   IEncounterLogEntry,
   LogEntryTypeEnum,
 } from './interfaces/IEncounterLog';
+import { TeamEnum } from './interfaces/TeamEnum';
 import {
   deathMessage,
   encounterSummaryMessage,
@@ -112,13 +113,13 @@ export class Encounter {
     return this.encunterLog;
   }
 
-  private getRoundOrder(): ICharacter[] {
+  private getRoundOrder(): IEngineCharacter[] {
     let allCharacters = [
       ...this.encounterConfig.teamA.filter(char => char.currentHp > 0),
       ...this.encounterConfig.teamB.filter(char => char.currentHp > 0),
     ];
 
-    const ordered: ICharacter[] = [];
+    const ordered: IEngineCharacter[] = [];
 
     while (!!allCharacters.length) {
       const pickedCharacter = this.pickCharacterBasingOnInitiative(
@@ -134,22 +135,22 @@ export class Encounter {
   }
 
   private pickCharacterBasingOnInitiative(
-    characters: ICharacter[],
-  ): ICharacter {
+    characters: IEngineCharacter[],
+  ): IEngineCharacter {
     const sortedByInitiative = sortBy(
       characters,
-      char => char.baseStats.initiative,
+      char => char.engineStats.initiative,
     );
     const initiativeSum = sumBy(
       sortedByInitiative,
-      char => char.baseStats.initiative,
+      char => char.engineStats.initiative,
     );
 
     const randomNumber = random(initiativeSum - 1);
     let cumulative = 0;
 
     for (const character of sortedByInitiative) {
-      cumulative += character.baseStats.initiative;
+      cumulative += character.engineStats.initiative;
       if (randomNumber < cumulative) {
         return character;
       }
@@ -169,7 +170,7 @@ export class Encounter {
       );
   }
 
-  private pickOpponent(character: ICharacter): ICharacter {
+  private pickOpponent(character: IEngineCharacter): IEngineCharacter {
     const oppositeTeamEnum =
       character.team === TeamEnum.teamA ? TeamEnum.teamB : TeamEnum.teamA;
     const oppositeTeam = this.encounterConfig[oppositeTeamEnum];
@@ -177,20 +178,23 @@ export class Encounter {
     return oppositeTeam[random(oppositeTeam.length - 1)];
   }
 
-  private checkHit(attacker: ICharacter, defender: ICharacter): boolean {
-    const rollSum = attacker.baseStats.hitRating + defender.baseStats.dodge;
+  private checkHit(
+    attacker: IEngineCharacter,
+    defender: IEngineCharacter,
+  ): boolean {
+    const rollSum = attacker.engineStats.hitRating + defender.engineStats.dodge;
     const randomNumber = random(rollSum);
 
-    return randomNumber < attacker.baseStats.hitRating;
+    return randomNumber < attacker.engineStats.hitRating;
   }
 
   private getActionDamage(
     action: IAction,
-    character: ICharacter,
-    opponent: ICharacter,
+    character: IEngineCharacter,
+    opponent: IEngineCharacter,
   ): number {
-    const characterBaseStats = character.baseStats;
-    const opponentBaseStats = opponent.baseStats;
+    const characterBaseStats = character.engineStats;
+    const opponentBaseStats = opponent.engineStats;
     const baseDamage =
       action.damageModifiers.multiplyFactor *
         random(characterBaseStats.damage.min, characterBaseStats.damage.max) +

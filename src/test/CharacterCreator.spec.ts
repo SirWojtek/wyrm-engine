@@ -3,11 +3,11 @@ import {
   CharacterSubtypeEnum,
   CharacterTypeEnum,
 } from '../CharacterCreator';
-import { Engine } from '../Engine';
-import { createEngine } from '../wyrm-engine';
+import { createEngine } from '../create-engine';
+import { WyrmEngine } from '../WyrmEngine';
 
 describe('Encounter', () => {
-  let engine: Engine;
+  let engine: WyrmEngine;
   let characterCreator: CharacterCreator;
 
   beforeEach(() => {

@@ -1,6 +1,6 @@
 import { merge } from 'lodash';
-import { Engine } from './Engine';
 import { IEngineConfig } from './interfaces/IEngineConfig';
+import { WyrmEngine } from './WyrmEngine';
 
 export const DEFAULT_CONFIG: IEngineConfig = {
   statPointsPerLevel: 3,
@@ -24,7 +24,9 @@ export const DEFAULT_CONFIG: IEngineConfig = {
   },
 };
 
-export function createEngine(engineConfig?: Partial<IEngineConfig>): Engine {
+export function createEngine(
+  engineConfig?: Partial<IEngineConfig>,
+): WyrmEngine {
   const config = merge(DEFAULT_CONFIG, engineConfig);
-  return new Engine(config);
+  return new WyrmEngine(config);
 }

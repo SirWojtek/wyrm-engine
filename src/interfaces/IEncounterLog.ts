@@ -1,5 +1,6 @@
 import { IAction } from './IAction';
-import { ICharacter, TeamEnum } from './ICharacter';
+import { IEngineCharacter } from './IEngineCharacter';
+import { TeamEnum } from './TeamEnum';
 
 export enum LogEntryTypeEnum {
   General,
@@ -15,19 +16,19 @@ export interface IGeneralEncounterLogEntry {
 }
 
 export interface IEncounterSummaryLogEntry extends IGeneralEncounterLogEntry {
-  orderedCharacters: ICharacter[];
+  orderedCharacters: IEngineCharacter[];
 }
 
 export interface IActionEncounterLogEntry extends IGeneralEncounterLogEntry {
-  attacker: ICharacter;
-  defender: ICharacter;
+  attacker: IEngineCharacter;
+  defender: IEngineCharacter;
   action: IAction;
   missed: boolean;
   damageDone: number;
 }
 
 export interface IDeathEncounterLogEntry extends IGeneralEncounterLogEntry {
-  killed: ICharacter;
+  killed: IEngineCharacter;
 }
 
 export interface IWinEncounterLogEntry extends IGeneralEncounterLogEntry {

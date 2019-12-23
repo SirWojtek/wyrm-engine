@@ -1,6 +1,6 @@
 import { IDamage } from './IDamage';
 
-export interface IBaseStats {
+export interface IEngineStats {
   damage: IDamage;
   attackPower: number;
   armorPenetration: number;

@@ -13,7 +13,7 @@
     "build:rollup": "rollup -c rollup.config.js",
     "build:docs": "typedoc --out docs --target es6 --theme minimal --mode file src",
     "start": "rollup -c rollup.config.js -w",
-    "engine-analyzer": "ts-node ./tools/engine-analyzer.ts",
+    "character-type-analyzer": "ts-node ./tools/character-type-analyzer.ts",
     "level-difference-analyzer": "ts-node ./tools/level-difference-analyzer.ts",
     "test": "jest"
   },

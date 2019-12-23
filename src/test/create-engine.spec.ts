@@ -1,4 +1,4 @@
-import { createEngine, DEFAULT_CONFIG } from '../wyrm-engine';
+import { createEngine, DEFAULT_CONFIG } from '../create-engine';
 
 describe('createEngine', () => {
   test('should use default setting if no other provided', () => {

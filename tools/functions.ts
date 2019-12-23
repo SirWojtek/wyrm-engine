@@ -4,13 +4,13 @@ import {
   CharacterTypeEnum,
   ICharacterData,
 } from '../src/CharacterCreator';
-import { Engine } from '../src/Engine';
 import {
   IAction,
   IWinEncounterLogEntry,
   LogEntryTypeEnum,
   TeamEnum,
 } from '../src/interfaces';
+import { WyrmEngine } from '../src/WyrmEngine';
 
 // tslint:disable:no-console
 
@@ -49,7 +49,7 @@ export function pickFirstActionStrategy(
 }
 
 export function simulate(
-  engine: Engine,
+  engine: WyrmEngine,
   firstChracterData: ICharacterData,
   secondChracterData: ICharacterData,
   debug?: boolean,
@@ -82,7 +82,7 @@ export function simulate(
 }
 
 export function simulateLoop(
-  engine: Engine,
+  engine: WyrmEngine,
   firstLevel: number,
   secondLevel: number,
   firstCharType: CharacterTypeEnum,

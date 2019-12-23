@@ -1,9 +1,10 @@
 import { v4 as uuid } from 'uuid';
 
 import { round } from 'lodash';
-import { IBaseCharacter } from './interfaces/ICharacter';
+import { IAction } from './interfaces/IAction';
+import { ICharacter } from './interfaces/ICharacter';
 import { IEngineConfig } from './interfaces/IEngineConfig';
-import { IAction, IStats } from './wyrm-engine';
+import { IStats } from './interfaces/IStats';
 
 const ATTACK_ACTION: IAction = {
   id: uuid(),
@@ -31,7 +32,7 @@ export interface ICharacterData {
   level: number;
   type: CharacterTypeEnum;
   subtype: CharacterSubtypeEnum;
-  overrideCharacter?: Partial<IBaseCharacter>;
+  overrideCharacter?: Partial<ICharacter>;
 }
 
 type Stats = 'power' | 'dexterity' | 'stamina';
@@ -67,7 +68,7 @@ export class CharacterCreator {
 
   constructor(private engineConfig: IEngineConfig) {}
 
-  createCharacter(data: ICharacterData): IBaseCharacter {
+  createCharacter(data: ICharacterData): ICharacter {
     const characterModifiers = this.characterTypeModifiers[data.type];
     return this.createCharacterInner(data, characterModifiers);
   }
@@ -75,7 +76,7 @@ export class CharacterCreator {
   private createCharacterInner(
     data: ICharacterData,
     modifiers: StatModifiers,
-  ): IBaseCharacter {
+  ): ICharacter {
     const { maxHpModifier } = this.engineConfig;
     const maxDamage = this.getMaxDamage(data.level, data.subtype);
     const minDamage = round(maxDamage * this.minDamageModifier);

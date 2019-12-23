@@ -1,14 +1,15 @@
 import { CharacterSubtypeEnum, CharacterTypeEnum } from '../CharacterCreator';
-import { Engine } from '../Engine';
-import { DEFAULT_CONFIG, IBaseCharacter } from '../wyrm-engine';
+import { DEFAULT_CONFIG } from '../create-engine';
+import { ICharacter } from '../interfaces/ICharacter';
+import { WyrmEngine } from '../WyrmEngine';
 
-describe('Engine', () => {
-  let engine: Engine;
-  let kyle: IBaseCharacter;
-  let jenny: IBaseCharacter;
+describe('WyrmEngine', () => {
+  let engine: WyrmEngine;
+  let kyle: ICharacter;
+  let jenny: ICharacter;
 
   beforeEach(() => {
-    engine = new Engine(DEFAULT_CONFIG);
+    engine = new WyrmEngine(DEFAULT_CONFIG);
     kyle = engine.getCharacterCreator().createCharacter({
       name: 'Kyle',
       level: 5,

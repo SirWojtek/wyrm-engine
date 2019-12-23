@@ -1,17 +1,17 @@
 import { countBy, flatMap, groupBy } from 'lodash';
-import { CharacterTypeEnum, ICharacterData } from '../CharacterCreator';
-import { Engine } from '../Engine';
 import {
   createEngine,
   Encounter,
   IActionEncounterLogEntry,
-  IBaseCharacter,
+  ICharacter,
   IDeathEncounterLogEntry,
   IEncounterSummaryLogEntry,
   IWinEncounterLogEntry,
   LogEntryTypeEnum,
   TeamEnum,
-} from '../wyrm-engine';
+} from '..';
+import { CharacterTypeEnum, ICharacterData } from '../CharacterCreator';
+import { WyrmEngine } from '../WyrmEngine';
 import {
   createEncounter,
   simulateEncounters,
@@ -21,7 +21,7 @@ import {
 const TEST_ITERATIONS = 100;
 
 describe('Encounter', () => {
-  let engine: Engine;
+  let engine: WyrmEngine;
 
   beforeEach(() => {
     engine = createEngine();
@@ -29,8 +29,8 @@ describe('Encounter', () => {
 
   describe('actions', () => {
     let encounter: Encounter;
-    let kyle: IBaseCharacter;
-    let jenny: IBaseCharacter;
+    let kyle: ICharacter;
+    let jenny: ICharacter;
 
     beforeEach(() => {
       const encounterData = createEncounter(
@@ -291,6 +291,6 @@ describe('Encounter', () => {
     ).toEqual(iterations);
     expect(
       countedByTeam[TeamEnum.teamA] / countedByTeam[TeamEnum.teamB],
-    ).toBeCloseTo(1, 1);
+    ).toBeCloseTo(1, 0);
   });
 });
