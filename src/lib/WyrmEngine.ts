@@ -9,11 +9,25 @@ import { IEngineConfig } from './interfaces/IEngineConfig';
 import { IEngineStats } from './interfaces/IEngineStats';
 import { TeamEnum } from './interfaces/TeamEnum';
 
+/**
+ * The main class responsible for high-level interaction with engine.
+ */
 export class WyrmEngine {
   private characterCreator = new CharacterCreator(this.engineConfig);
 
+  /**
+   * Constructor can be used to inject own engine configuration.
+   * If you don't want to customize engine parameters, use [[createEngine]]
+   * @param engineConfig Engine internal configuration
+   */
   constructor(private engineConfig: IEngineConfig) {}
 
+  /**
+   * Creates encounter between given two teams
+   * @param teamA array with all characters belongs to team A
+   * @param teamB array with all characters belongs to team B
+   * @returns encouter object to interact with
+   */
   createEncounter(teamA: ICharacter[], teamB: ICharacter[]): Encounter {
     if (!teamA.length || !teamB.length) {
       throw Error('At least one of team is empty');
@@ -35,10 +49,16 @@ export class WyrmEngine {
     return new Encounter(config);
   }
 
+  /**
+   * Returns current engine configuration
+   */
   getConfig(): IEngineConfig {
     return this.engineConfig;
   }
 
+  /**
+   * Gets character creator
+   */
   getCharacterCreator(): CharacterCreator {
     return this.characterCreator;
   }
