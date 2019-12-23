@@ -3,14 +3,14 @@ import {
   CharacterSubtypeEnum,
   CharacterTypeEnum,
   ICharacterData,
-} from '../src/CharacterCreator';
+} from '../src/lib/CharacterCreator';
 import {
   IAction,
   IWinEncounterLogEntry,
   LogEntryTypeEnum,
   TeamEnum,
-} from '../src/interfaces';
-import { WyrmEngine } from '../src/WyrmEngine';
+} from '../src/lib/interfaces';
+import { WyrmEngine } from '../src/lib/WyrmEngine';
 
 // tslint:disable:no-console
 

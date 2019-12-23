@@ -1,7 +1,10 @@
-import { CharacterSubtypeEnum, CharacterTypeEnum } from '../CharacterCreator';
-import { DEFAULT_CONFIG } from '../create-engine';
-import { ICharacter } from '../interfaces/ICharacter';
-import { WyrmEngine } from '../WyrmEngine';
+import {
+  CharacterSubtypeEnum,
+  CharacterTypeEnum,
+} from '../lib/CharacterCreator';
+import { DEFAULT_CONFIG } from '../lib/create-engine';
+import { ICharacter } from '../lib/interfaces/ICharacter';
+import { WyrmEngine } from '../lib/WyrmEngine';
 
 describe('WyrmEngine', () => {
   let engine: WyrmEngine;

@@ -9,9 +9,9 @@ import {
   IWinEncounterLogEntry,
   LogEntryTypeEnum,
   TeamEnum,
-} from '..';
-import { CharacterTypeEnum, ICharacterData } from '../CharacterCreator';
-import { WyrmEngine } from '../WyrmEngine';
+} from '../lib';
+import { CharacterTypeEnum, ICharacterData } from '../lib/CharacterCreator';
+import { WyrmEngine } from '../lib/WyrmEngine';
 import {
   createEncounter,
   simulateEncounters,

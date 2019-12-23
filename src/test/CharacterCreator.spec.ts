@@ -2,9 +2,9 @@ import {
   CharacterCreator,
   CharacterSubtypeEnum,
   CharacterTypeEnum,
-} from '../CharacterCreator';
-import { createEngine } from '../create-engine';
-import { WyrmEngine } from '../WyrmEngine';
+} from '../lib/CharacterCreator';
+import { createEngine } from '../lib/create-engine';
+import { WyrmEngine } from '../lib/WyrmEngine';
 
 describe('Encounter', () => {
   let engine: WyrmEngine;

@@ -3,9 +3,9 @@ import {
   CharacterSubtypeEnum,
   CharacterTypeEnum,
   ICharacterData,
-} from '../../CharacterCreator';
-import { Engine } from '../../Engine';
-import { IEcounterLog } from '../../interfaces';
+} from '../../lib/CharacterCreator';
+import { IEcounterLog } from '../../lib/interfaces';
+import { WyrmEngine } from '../../lib/WyrmEngine';
 
 const DEFAULT_CHARACTER_CONFIG: ICharacterData = {
   name: 'Unknown',
@@ -15,7 +15,7 @@ const DEFAULT_CHARACTER_CONFIG: ICharacterData = {
 };
 
 export function createEncounter(
-  engine: Engine,
+  engine: WyrmEngine,
   template1: Partial<ICharacterData>,
   template2: Partial<ICharacterData>,
 ) {
@@ -38,7 +38,7 @@ export function createEncounter(
 }
 
 export function simulateEncounters(
-  engine: Engine,
+  engine: WyrmEngine,
   simulations: number,
   template1: Partial<ICharacterData>,
   template2: Partial<ICharacterData>,
@@ -53,7 +53,7 @@ export function simulateEncounters(
 }
 
 export function simulateEncounterSingleRound(
-  engine: Engine,
+  engine: WyrmEngine,
   rounds: number,
   template1: Partial<ICharacterData>,
   template2: Partial<ICharacterData>,

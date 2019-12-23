@@ -1,6 +1,6 @@
-import { IBaseStats } from './IBaseStats';
+import { IEngineStats } from './IEngineStats';
 
-export type IStatsModifiers = { [stat in keyof IBaseStats]: number };
+export type IStatsModifiers = { [stat in keyof IEngineStats]: number };
 
 export interface IDamageConfig {
   startDamage: number;

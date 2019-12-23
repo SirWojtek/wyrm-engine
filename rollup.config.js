@@ -10,7 +10,7 @@ const pkg = require('./package.json');
 const libraryName = 'wyrm-engine';
 
 export default {
-  input: `src/index.ts`,
+  input: `src/lib/index.ts`,
   output: [
     {
       file: pkg.main,
@@ -23,7 +23,7 @@ export default {
   // Indicate here external modules you don't wanna include in your bundle (i.e.: 'lodash')
   external: [],
   watch: {
-    include: 'src/**'
+    include: 'src/lib/**'
   },
   plugins: [
     // Allow json resolution

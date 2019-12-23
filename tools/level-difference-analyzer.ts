@@ -3,8 +3,8 @@ import { render } from 'mustache';
 import {
   CharacterSubtypeEnum,
   CharacterTypeEnum,
-} from '../src/CharacterCreator';
-import { createEngine } from '../src/create-engine';
+} from '../src/lib/CharacterCreator';
+import { createEngine } from '../src/lib/create-engine';
 
 import { range } from 'lodash';
 import { simulateLoop } from './functions';

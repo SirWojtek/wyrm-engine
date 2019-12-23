@@ -1,4 +1,4 @@
-import { createEngine, DEFAULT_CONFIG } from '../create-engine';
+import { createEngine, DEFAULT_CONFIG } from '../lib/create-engine';
 
 describe('createEngine', () => {
   test('should use default setting if no other provided', () => {

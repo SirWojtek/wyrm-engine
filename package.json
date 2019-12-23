@@ -11,7 +11,7 @@
     "build": "yarn build:ts && yarn build:rollup && yarn build:docs",
     "build:ts": "tsc",
     "build:rollup": "rollup -c rollup.config.js",
-    "build:docs": "typedoc --out docs --target es6 --theme minimal --mode file src",
+    "build:docs": "typedoc --out docs --target es6 --theme minimal --mode file src/lib",
     "lint": "tslint --project tsconfig.json",
     "start": "rollup -c rollup.config.js -w",
     "character-type-analyzer": "ts-node ./tools/character-type-analyzer.ts",
