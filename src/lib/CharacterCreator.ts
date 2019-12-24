@@ -6,6 +6,9 @@ import { ICharacter } from './interfaces/ICharacter';
 import { IEngineConfig } from './interfaces/IEngineConfig';
 import { IStats } from './interfaces/IStats';
 
+/**
+ * Simple attack action with no damage bonuses
+ */
 const ATTACK_ACTION: IAction = {
   id: uuid(),
   name: 'Attack',
@@ -15,23 +18,65 @@ const ATTACK_ACTION: IAction = {
   },
 };
 
+/**
+ * Enumerates types of characters
+ */
 export enum CharacterTypeEnum {
+  /**
+   * Deals more damage
+   */
   Strong = 'Strong',
+  /**
+   * Hits more often, has more chance to dodge
+   */
   Swift = 'Swift',
+  /**
+   * Has more hit points
+   */
   Tought = 'Tought',
 }
 
+/**
+ * Enumerates sutypes of characters
+ */
 export enum CharacterSubtypeEnum {
+  /**
+   * Has damage bonus and weaker armor
+   */
   Attacker = 'Attacker',
+  /**
+   * Balanced damage and armor
+   */
   Balanced = 'Balanced',
+  /**
+   * Has armor bonus and weaker damage
+   */
   Defender = 'Defender',
 }
 
+/**
+ * Serves as arguments list for character creation method
+ */
 export interface ICharacterData {
+  /**
+   * Name of character
+   */
   name: string;
+  /**
+   * Level of character. Higher level -> more powerful character
+   */
   level: number;
+  /**
+   * Type of character to create
+   */
   type: CharacterTypeEnum;
+  /**
+   * Subtype of character to create
+   */
   subtype: CharacterSubtypeEnum;
+  /**
+   * Provided values will override character parameters
+   */
   overrideCharacter?: Partial<ICharacter>;
 }
 
@@ -41,6 +86,9 @@ type CharacterTypeModifiers = {
   [characterType in CharacterTypeEnum]: StatModifiers;
 };
 
+/**
+ * Class to simplify character creation basing on current engine configuration
+ */
 export class CharacterCreator {
   private subtypeModifiers = {
     good: 1.2,
@@ -68,6 +116,11 @@ export class CharacterCreator {
 
   constructor(private engineConfig: IEngineConfig) {}
 
+  /**
+   * Creates engine character entity basing on given template
+   * @param data template used to create engine character
+   * @returns character compatible with engine
+   */
   createCharacter(data: ICharacterData): ICharacter {
     const characterModifiers = this.characterTypeModifiers[data.type];
     return this.createCharacterInner(data, characterModifiers);
