@@ -2,6 +2,10 @@ import { merge } from 'lodash';
 import { IEngineConfig } from './interfaces/IEngineConfig';
 import { WyrmEngine } from './WyrmEngine';
 
+/**
+ * It contains default engine parameters which are tuned to ensure each
+ * character type have less or more equal chance to win encounter.
+ */
 export const DEFAULT_CONFIG: IEngineConfig = {
   statPointsPerLevel: 3,
   statsModifiers: {
@@ -24,6 +28,11 @@ export const DEFAULT_CONFIG: IEngineConfig = {
   },
 };
 
+/**
+ * Creates instance of wyrm engine object which is facade to `wyrm-engine` library.
+ * @param engineConfig if provided, overrides the default settings defined in [[DEFAULT_CONFIG]]
+ * @returns instance of engine facade
+ */
 export function createEngine(
   engineConfig?: Partial<IEngineConfig>,
 ): WyrmEngine {

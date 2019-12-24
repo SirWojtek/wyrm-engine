@@ -11,6 +11,8 @@ import { TeamEnum } from './interfaces/TeamEnum';
 
 /**
  * The main class responsible for high-level interaction with engine.
+ * Single instance of this object encapsulates single engine configuration.
+ * The simplest way to obtain instance is to call [[createEngine]] function.
  */
 export class WyrmEngine {
   private characterCreator = new CharacterCreator(this.engineConfig);
@@ -23,7 +25,7 @@ export class WyrmEngine {
   constructor(private engineConfig: IEngineConfig) {}
 
   /**
-   * Creates encounter between given two teams
+   * Creates encounter between given two teams.
    * @param teamA array with all characters belongs to team A
    * @param teamB array with all characters belongs to team B
    * @returns encouter object to interact with
