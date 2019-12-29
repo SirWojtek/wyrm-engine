@@ -17,13 +17,63 @@ import {
   winMessage,
 } from './utils/log-messages';
 
+/**
+ * ## Overview
+ * Encapsulates battle logic. Each instance of class represents single, independent battle between two teams.
+ *
+ * ## General rules
+ * Encounters are round based - calling method [[tick]] triggers simulation of single round.
+ * Encounter lasts as long as there is at least one member with some hit points in both teams.
+ * When battle is over, [[tick]] starts to return `undefined`.
+ *
+ * ## Logic
+ * Encounter's [[tick]] is performing the following scenario:
+ * 1. Check if one of team win, return if so
+ * 2. Determine order of the round
+ * 3. Trigger [[controllerCallback]] for both parties to plan actions
+ * 4. For each of ordered characters perform an action and check for winner
+ *
+ * ## Round order
+ * Order of battle participants is determined in each turn,
+ * characters with more initiative are more likely to start first (see [[EngineStats]]).
+ *
+ * ## Controlling characters
+ * There are two ways of controling how characters acts during encounter:
+ * 1. By using method [[addAction]] before invoking [[tick]].
+ * Actions planned by this method are "one shots" - they queue only for one round. This method is designed for non-AI players.
+ * 2. By defining [[controllerCallback]] for character.
+ * Callback is invoked repeatedly to determine what action should be performed. This way allows to set AI logic.
+ *
+ * ## Gathering output
+ * Information about encounter is stored in encounter log which is array of [[IEncounterLogEntry]].
+ * There are several types of messages generated during battle:
+ * * round summary message ([[IEncounterSummaryLogEntry]]) - emitted at beginning of each round, contains information about round order
+ * * action message ([[IActionEncounterLogEntry]]) - emitted when one of characters is perforrming action,
+ * can contains info about damage if character hits opponent
+ * * death message ([[IDeathEncounterLogEntry]]) - emitted when one of encounter player hit points drop below 1
+ * * win message ([[IWinEncounterLogEntry]]) - emitted when all of teams' members hit points drop below 1,
+ * which means that team was defeate. This is always the last message emitted during encounter.
+ *
+ * These are ways to get encounter log messages:
+ * * by gathering output from [[tick]] method - each call returns logs for round performed (or `undefined` if one of parties win)
+ * * by calling [[getEncounterLog]] - this returns all generated messages
+ * * by defining [[logMessageCallback]] - callback function will be invoked with single encounter message as argument
+ *
+ */
 export class Encounter {
   private roundActions: { [characterId: string]: IAction | undefined } = {};
   private encunterLog: IEcounterLog = [];
   private encounterRound = 1;
 
+  /**
+   * Constructs encounter using given configuration
+   */
   constructor(private encounterConfig: IEncounterConfig) {}
 
+  /**
+   * Performs single encouter round. Invoke repeatedly to schedule battle.
+   * @returns logs for performed round or `undefined` if battle is over
+   */
   tick(): IEcounterLog | undefined {
     if (this.encunterLog.find(l => l.entryType === LogEntryTypeEnum.Win)) {
       return undefined;
@@ -101,14 +151,27 @@ export class Encounter {
     return roundLog;
   }
 
+  /**
+   * Resets actions planned for current round.
+   * This function does not affect potential actions from [[controllerCallback]].
+   */
   resetRoundActions() {
     this.roundActions = {};
   }
 
+  /**
+   * Schedule action for current round.
+   * @param characterId id of character for which action should be registered
+   * @param action action to be perfomed
+   */
   addAction(characterId: string, action: IAction) {
     this.roundActions[characterId] = action;
   }
 
+  /**
+   * Gets logs for current state of encounter
+   * @returns array of messages contains information about battle
+   */
   getEncounterLog(): IEcounterLog {
     return this.encunterLog;
   }

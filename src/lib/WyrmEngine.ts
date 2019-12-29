@@ -1,6 +1,6 @@
 import { v4 as uuid } from 'uuid';
 
-import { IEngineCharacter } from '.';
+import { IEcounterLog, IEngineCharacter } from '.';
 import { CharacterCreator } from './CharacterCreator';
 import { Encounter } from './Encounter';
 import { ICharacter } from './interfaces/ICharacter';
@@ -28,9 +28,14 @@ export class WyrmEngine {
    * Creates encounter between given two teams.
    * @param teamA array with all characters belongs to team A
    * @param teamB array with all characters belongs to team B
+   * @param logMessageCallback invoked when encounter message is emitted
    * @returns encouter object to interact with
    */
-  createEncounter(teamA: ICharacter[], teamB: ICharacter[]): Encounter {
+  createEncounter(
+    teamA: ICharacter[],
+    teamB: ICharacter[],
+    logMessageCallback?: () => IEcounterLog,
+  ): Encounter {
     if (!teamA.length || !teamB.length) {
       throw Error('At least one of team is empty');
     }
@@ -46,6 +51,7 @@ export class WyrmEngine {
       id: uuid(),
       teamA: encounterTeamA,
       teamB: encounterTeamB,
+      logMessageCallback,
     };
 
     return new Encounter(config);
