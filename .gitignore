@@ -6,3 +6,5 @@ bundles/
 docs/
 
 out/*.html
+
+coverage/
