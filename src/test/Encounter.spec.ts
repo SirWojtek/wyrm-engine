@@ -35,8 +35,8 @@ describe('Encounter', () => {
     beforeEach(() => {
       const encounterData = createEncounter(
         engine,
-        { name: 'Kyle' },
-        { name: 'Jenny' },
+        { name: 'Kyle', overrideCharacter: { controllerCallback: undefined } },
+        { name: 'Jenny', overrideCharacter: { controllerCallback: undefined } },
       );
       encounter = encounterData.encounter;
       kyle = encounterData.character1;
@@ -45,10 +45,10 @@ describe('Encounter', () => {
 
     test('do nothing if actions are not set', () => {
       encounter.tick();
-      expect(encounter.getEncounterLog().length).toEqual(1);
+      expect(encounter.getEncounterLogs().length).toEqual(1);
 
       encounter.tick();
-      expect(encounter.getEncounterLog().length).toEqual(2);
+      expect(encounter.getEncounterLogs().length).toEqual(2);
     });
 
     test('character with action set won', () => {
@@ -59,12 +59,12 @@ describe('Encounter', () => {
       }
 
       const winMessage: IWinEncounterLogEntry = encounter
-        .getEncounterLog()
+        .getEncounterLogs()
         .find(
           l => l.entryType === LogEntryTypeEnum.Win,
         ) as IWinEncounterLogEntry;
       const deathMessage: IDeathEncounterLogEntry = encounter
-        .getEncounterLog()
+        .getEncounterLogs()
         .find(
           l => l.entryType === LogEntryTypeEnum.Death,
         ) as IDeathEncounterLogEntry;
@@ -81,9 +81,8 @@ describe('Encounter', () => {
         engine,
         {
           name: 'Kyle',
-          overrideCharacter: { controllerCallback: actions => actions[0] },
         },
-        { name: 'Jenny' },
+        { name: 'Jenny', overrideCharacter: { controllerCallback: undefined } },
       );
       encounter = encounterData.encounter;
       kyle = encounterData.character1;
@@ -94,12 +93,12 @@ describe('Encounter', () => {
       }
 
       const winMessage: IWinEncounterLogEntry = encounter
-        .getEncounterLog()
+        .getEncounterLogs()
         .find(
           l => l.entryType === LogEntryTypeEnum.Win,
         ) as IWinEncounterLogEntry;
       const deathMessage: IDeathEncounterLogEntry = encounter
-        .getEncounterLog()
+        .getEncounterLogs()
         .find(
           l => l.entryType === LogEntryTypeEnum.Death,
         ) as IDeathEncounterLogEntry;
@@ -119,12 +118,10 @@ describe('Encounter', () => {
     beforeEach(() => {
       kyle = {
         name: 'Kyle',
-        overrideCharacter: { controllerCallback: actions => actions[0] },
       };
       jenny = {
         name: 'Jenny',
         type: CharacterTypeEnum.Swift,
-        overrideCharacter: { controllerCallback: actions => actions[0] },
       };
     });
 
@@ -204,12 +201,10 @@ describe('Encounter', () => {
       kyle = {
         name: 'Kyle',
         type: CharacterTypeEnum.Strong,
-        overrideCharacter: { controllerCallback: actions => actions[0] },
       };
       jenny = {
         name: 'Jenny',
         type: CharacterTypeEnum.Tought,
-        overrideCharacter: { controllerCallback: actions => actions[0] },
       };
     });
 
@@ -277,8 +272,8 @@ describe('Encounter', () => {
       simulateEncounters(
         engine,
         iterations,
-        { name: 'Kyle', overrideCharacter: { controllerCallback: a => a[0] } },
-        { name: 'Jenny', overrideCharacter: { controllerCallback: a => a[0] } },
+        { name: 'Kyle' },
+        { name: 'Jenny' },
       ),
     );
     const winMessages = (mergedLog.filter(

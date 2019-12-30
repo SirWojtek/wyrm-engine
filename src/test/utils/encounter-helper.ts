@@ -48,7 +48,7 @@ export function simulateEncounters(
     while (encounter.tick()) {
       // noop
     }
-    return encounter.getEncounterLog();
+    return encounter.getEncounterLogs();
   });
 }
 
@@ -61,6 +61,6 @@ export function simulateEncounterSingleRound(
   return range(rounds).reduce(log => {
     const { encounter } = createEncounter(engine, template1, template2);
     encounter.tick();
-    return [...encounter.getEncounterLog(), ...log];
+    return [...encounter.getEncounterLogs(), ...log];
   }, [] as IEcounterLog);
 }

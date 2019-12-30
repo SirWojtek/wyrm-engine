@@ -117,7 +117,13 @@ export class CharacterCreator {
   constructor(private engineConfig: IEngineConfig) {}
 
   /**
-   * Creates engine character entity basing on given template
+   * Creates engine character entity basing on given template.
+   *
+   * If `overrideCharacter` is not specified, the created character will:
+   * * have generated `id`
+   * * have one action defined
+   * * be AI controlled - the first action will be chosen as round action
+   *
    * @param data template used to create engine character
    * @returns character compatible with engine
    */
@@ -154,6 +160,7 @@ export class CharacterCreator {
       maxHp,
       currentHp: maxHp,
       actions: [ATTACK_ACTION],
+      controllerCallback: a => a[0],
       ...data.overrideCharacter,
     };
   }

@@ -172,7 +172,7 @@ export class Encounter {
    * Gets logs for current state of encounter
    * @returns array of messages contains information about battle
    */
-  getEncounterLog(): IEcounterLog {
+  getEncounterLogs(): IEcounterLog {
     return this.encunterLog;
   }
 
