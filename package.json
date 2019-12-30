@@ -20,6 +20,8 @@
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^6.0.0",
+    "@rollup/plugin-json": "^4.0.0",
+    "@rollup/plugin-replace": "^2.2.1",
     "@types/jest": "^24.0.23",
     "@types/lodash": "^4.14.149",
     "@types/mustache": "^0.8.32",
@@ -56,8 +58,6 @@
     }
   },
   "dependencies": {
-    "@rollup/plugin-json": "^4.0.0",
-    "@rollup/plugin-replace": "^2.2.1",
     "lodash": "^4.17.15",
     "uuid": "^3.3.3"
   }
