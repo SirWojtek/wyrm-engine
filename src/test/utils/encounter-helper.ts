@@ -1,9 +1,5 @@
 import { range } from 'lodash';
-import {
-  CharacterSubtypeEnum,
-  CharacterTypeEnum,
-  ICharacterData,
-} from '../../lib/CharacterCreator';
+import { CharacterTypeEnum, ICharacterData } from '../../lib/CharacterCreator';
 import { IEcounterLog } from '../../lib/interfaces';
 import { WyrmEngine } from '../../lib/WyrmEngine';
 
@@ -11,7 +7,6 @@ const DEFAULT_CHARACTER_CONFIG: ICharacterData = {
   name: 'Unknown',
   level: 10,
   type: CharacterTypeEnum.Strong,
-  subtype: CharacterSubtypeEnum.Balanced,
 };
 
 export function createEncounter(

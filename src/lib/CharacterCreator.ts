@@ -55,25 +55,35 @@ export enum CharacterSubtypeEnum {
 }
 
 /**
- * Serves as arguments list for character creation method
+ * Serves as arguments list for stats creation method
  */
-export interface ICharacterData {
-  /**
-   * Name of character
-   */
-  name: string;
-  /**
-   * Level of character. Higher level -> more powerful character
-   */
-  level: number;
+export interface IStatsData {
   /**
    * Type of character to create
    */
   type: CharacterTypeEnum;
   /**
-   * Subtype of character to create
+   * Subtype of character to create, default is `Balanced`
    */
-  subtype: CharacterSubtypeEnum;
+  subtype?: CharacterSubtypeEnum;
+  /**
+   * Level of character. Higher level -> more powerful character
+   */
+  level: number;
+}
+
+/**
+ * Serves as arguments list for character creation method
+ */
+export interface ICharacterData extends IStatsData {
+  /**
+   * Name of character
+   */
+  name?: string;
+  /**
+   * Tells the creator if it should generate AI controller
+   */
+  autoControl?: boolean;
   /**
    * Provided values will override character parameters
    */
@@ -128,44 +138,59 @@ export class CharacterCreator {
    * @returns character compatible with engine
    */
   createCharacter(data: ICharacterData): ICharacter {
-    const characterModifiers = this.characterTypeModifiers[data.type];
-    return this.createCharacterInner(data, characterModifiers);
-  }
-
-  private createCharacterInner(
-    data: ICharacterData,
-    modifiers: StatModifiers,
-  ): ICharacter {
-    const { maxHpModifier } = this.engineConfig;
-    const maxDamage = this.getMaxDamage(data.level, data.subtype);
-    const minDamage = round(maxDamage * this.minDamageModifier);
-    const armor = this.getArmor(data.level, data.subtype);
-    const statsSum = data.level * this.engineConfig.statPointsPerLevel;
-
-    const stats: IStats = {
-      damage: { min: minDamage, max: maxDamage },
-      armor,
-      power: modifiers.power * statsSum,
-      dexterity: modifiers.dexterity * statsSum,
-      stamina: modifiers.stamina * statsSum,
-    };
-
-    const maxHp = round(stats.stamina * maxHpModifier);
+    const autoControl =
+      data.autoControl === undefined ? true : data.autoControl;
+    const stats = this.getStats(data);
+    const maxHp = this.getMaxHp(stats);
 
     return {
       id: uuid(),
       name: data.name,
       level: data.level,
       stats,
-      maxHp,
+      maxHp: this.getMaxHp(stats),
       currentHp: maxHp,
       actions: [ATTACK_ACTION],
-      controllerCallback: a => a[0],
+      controllerCallback: autoControl ? a => a[0] : undefined,
       ...data.overrideCharacter,
     };
   }
 
-  private getMaxDamage(level: number, subtype: CharacterSubtypeEnum): number {
+  /**
+   * Computes character attributes basing on given data.
+   *
+   * @param data metadata needed to compute stats
+   * @returns stats compatible with engine
+   */
+  getStats(data: IStatsData): IStats {
+    const subtype = data.subtype || CharacterSubtypeEnum.Balanced;
+    const characterModifiers = this.characterTypeModifiers[data.type];
+    const maxDamage = this.getMaxDamage(data.level, subtype);
+    const minDamage = round(maxDamage * this.minDamageModifier);
+    const armor = this.getArmor(data.level, subtype);
+    const statsSum = data.level * this.engineConfig.statPointsPerLevel;
+
+    return {
+      damage: { min: minDamage, max: maxDamage },
+      armor,
+      power: characterModifiers.power * statsSum,
+      dexterity: characterModifiers.dexterity * statsSum,
+      stamina: characterModifiers.stamina * statsSum,
+    };
+  }
+
+  /**
+   * Computes character maximum hp
+   *
+   * @param stats stats used to compute HP for
+   * @returns maximum allowed character hit points
+   */
+  getMaxHp(stats: IStats): number {
+    const { maxHpModifier } = this.engineConfig;
+    return round(stats.stamina * maxHpModifier);
+  }
+
+  getMaxDamage(level: number, subtype: CharacterSubtypeEnum): number {
     const { damageConfig } = this.engineConfig;
     const baseDmg =
       damageConfig.startDamage + level * damageConfig.damagePerLevel;
@@ -182,7 +207,7 @@ export class CharacterCreator {
     }
   }
 
-  private getArmor(level: number, subtype: CharacterSubtypeEnum): number {
+  getArmor(level: number, subtype: CharacterSubtypeEnum): number {
     const { armorConfig } = this.engineConfig;
     const baseArmor = round(
       armorConfig.startArmor + level * armorConfig.armorPerLevel,

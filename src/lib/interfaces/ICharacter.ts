@@ -10,7 +10,7 @@ export interface ICharacter {
    */
   id: string;
   /**
-   * name of character
+   * name of character, used for pretty-print log messages
    */
   name?: string;
   /**

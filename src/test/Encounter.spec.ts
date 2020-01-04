@@ -35,8 +35,8 @@ describe('Encounter', () => {
     beforeEach(() => {
       const encounterData = createEncounter(
         engine,
-        { name: 'Kyle', overrideCharacter: { controllerCallback: undefined } },
-        { name: 'Jenny', overrideCharacter: { controllerCallback: undefined } },
+        { name: 'Kyle', autoControl: false },
+        { name: 'Jenny', autoControl: false },
       );
       encounter = encounterData.encounter;
       kyle = encounterData.character1;
@@ -82,7 +82,7 @@ describe('Encounter', () => {
         {
           name: 'Kyle',
         },
-        { name: 'Jenny', overrideCharacter: { controllerCallback: undefined } },
+        { name: 'Jenny', autoControl: false },
       );
       encounter = encounterData.encounter;
       kyle = encounterData.character1;

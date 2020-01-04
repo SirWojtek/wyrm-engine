@@ -67,13 +67,13 @@ export function simulate(
 
   if (debug) {
     encounter
-      .getEncounterLog()
+      .getEncounterLogs()
       .map(log => log.message)
       .forEach(message => console.log(message));
   }
 
   const winner = encounter
-    .getEncounterLog()
+    .getEncounterLogs()
     .find(l => l.entryType === LogEntryTypeEnum.Win) as IWinEncounterLogEntry;
   if (!winner) {
     throw new Error('Cannot find win message');
