@@ -132,15 +132,15 @@ const jenny: ICharacter = characterCreator.createCharacter({
 |:-------------------:|---------------------------------------------------------------------------------------------------------------------------------|
 | `name`              | (optional) A human-readable name of a character, will be used in battle event messages                                          |
 | `level`             | Defines general battle proficiency, higher level means more stats points to distribute                                          |
-| `type`              | Allows to choose a stats profile. Available values are:                                                                         |
-|                     | * `Strong` - prioritise adding stats points to power                                                                            |
-|                     | * `Swift` - prioritise adding stats points to dexterity                                                                         |
-|                     | * `Strong` - prioritise adding stats points to stamina                                                                          |
+| `type`              | Allows to choose a stats profile. Available values are:<br>                                                                     |
+|                     | * `Strong` - prioritise adding stats points to power <br>                                                                       |
+|                     | * `Swift` - prioritise adding stats points to dexterity<br>                                                                     |
+|                     | * `Strong` - prioritise adding stats points to stamina<br>                                                                      |
 |	              | For more info about stats (attributes) see [Stats description](#stats-description)                                              |
-| `subtype`           | (optional) Customize damage / armor profile. Available values are:                                                              |
-|                     | * `Attacker` - prioritise character damage over armor                                                                           |
-|                     | * `Balanced` - balance damage and armor                                                                                         |
-|                     | * `Defender` - prioritise character armor over damage                                                                           |
+| `subtype`           | (optional) Customize damage / armor profile. Available values are:<br>                                                          |
+|                     | * `Attacker` - prioritise character damage over armor<br>                                                                       |
+|                     | * `Balanced` - balance damage and armor<br>                                                                                     |
+|                     | * `Defender` - prioritise character armor over damage<br>                                                                       |
 |                     | The default value is `Balanced`. For more info check [Damage and armor](#damage-and-armor)                                      |
 | `autoControl`       | (optional) Should the AI controller be generated for the charater?                                                              |
 | `overrideCharacter` | (optional) Specify character properties defined in [Character model description](#character-model-description) to override them |
