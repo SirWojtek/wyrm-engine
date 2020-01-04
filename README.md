@@ -127,6 +127,7 @@ const jenny: ICharacter = characterCreator.createCharacter({
 ```
 
 `createCharacter` uses following parameters:
+
 | Name                | Description                                                                                                                     |
 |:-------------------:|---------------------------------------------------------------------------------------------------------------------------------|
 | `name`              | (optional) A human-readable name of a character, will be used in battle event messages                                          |
