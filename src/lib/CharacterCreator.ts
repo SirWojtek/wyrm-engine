@@ -1,6 +1,6 @@
 import { v4 as uuid } from 'uuid';
 
-import { round } from 'lodash';
+import { cloneDeep, round } from 'lodash';
 import { IAction } from './interfaces/IAction';
 import { ICharacter } from './interfaces/ICharacter';
 import { IEngineConfig } from './interfaces/IEngineConfig';
@@ -177,6 +177,15 @@ export class CharacterCreator {
       dexterity: characterModifiers.dexterity * statsSum,
       stamina: characterModifiers.stamina * statsSum,
     };
+  }
+
+  /**
+   * Returns the deafult attack actions without damage bonuses
+   *
+   * @returns default attack action
+   */
+  getAttackAction(): IAction {
+    return cloneDeep(ATTACK_ACTION);
   }
 
   /**
