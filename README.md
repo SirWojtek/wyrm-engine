@@ -129,6 +129,7 @@ const jenny: ICharacter = characterCreator.createCharacter({
 ```
 
 `createCharacter` uses following parameters:
+
 | Name                | Description                                                                                                                     |
 |:-------------------:|---------------------------------------------------------------------------------------------------------------------------------|
 | `name`              | (optional) A human-readable name of a character, will be used in battle event messages                                          |
@@ -247,6 +248,7 @@ const encounter = wyrmEngine.createEncounter([ kyle, jenny ], [ coral, jeff ]);
 ```
 
 `createEncounter` takes the following arguments:
+
 | Name			| Description									|
 |:---------------------:|-------------------------------------------------------------------------------|
 | `team1`		| Array of characters defining the first of the conflict side 			|
@@ -316,6 +318,7 @@ There are three ways to get battle logs:
 3. By calling `getEncounterLogs` on the encounter instance. With this method you can get whole battle history.
 
 ##### Message types
+
 | Name			| Description											|
 |:---------------------:|-----------------------------------------------------------------------------------------------|
 | Summary message	| Emitted at the beginning of each round, contains information about the round order		|
