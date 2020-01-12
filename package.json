@@ -6,6 +6,11 @@
   "main": "./bundles/index.umd.js",
   "module": "./dist/esm5/index.js",
   "typings": "./dist/types/index.d.ts",
+  "files": [
+    "package.json",
+    "dist",
+    "bundles"
+  ],
   "repository": "https://github.com/SirWojtek/wyrm-engine.git",
   "author": "SirWojtek",
   "license": "MIT",
@@ -18,7 +23,12 @@
     "start": "rollup -c rollup.config.js -w",
     "character-type-analyzer": "ts-node ./tools/character-type-analyzer.ts",
     "level-difference-analyzer": "ts-node ./tools/level-difference-analyzer.ts",
-    "test": "jest"
+    "test": "jest",
+    "publish": "yarn build && yarn publish"
+  },
+  "dependencies": {
+    "lodash": "^4.17.15",
+    "uuid": "^3.3.3"
   },
   "devDependencies": {
     "@rollup/plugin-json": "^4.0.0",
@@ -58,9 +68,5 @@
     "hooks": {
       "pre-commit": "lint-staged"
     }
-  },
-  "dependencies": {
-    "lodash": "^4.17.15",
-    "uuid": "^3.3.3"
   }
 }
