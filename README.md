@@ -381,3 +381,8 @@ wyrmEngine.createEncounter([ kyle ], [ aiCharacter ]);
 
 ## Customising engine
 Work in progress :)
+
+## Contact
+
+Email: momatoku@gmail.com
+Discord: SirWojtek#3331

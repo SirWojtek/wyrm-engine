@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "./bundles/index.umd.js",
   "module": "./dist/esm5/index.js",
-  "typings": "./dist/types/wyrm-engine.d.ts",
+  "typings": "./dist/types/index.d.ts",
   "repository": "git@github.com:SirWojtek/wyrm-engine.git",
   "author": "SirWojtek",
   "license": "MIT",
