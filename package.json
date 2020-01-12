@@ -3,6 +3,7 @@
   "homepage": "https://github.com/SirWojtek/wyrm-engine",
   "email": "momatoku@gmail.com",
   "version": "1.0.4",
+  "description": "Fully typed game engine library designed to simulate battles between virtual characters",
   "main": "./bundles/index.umd.js",
   "module": "./dist/esm5/index.js",
   "typings": "./dist/types/index.d.ts",
