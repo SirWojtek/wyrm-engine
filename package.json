@@ -1,10 +1,12 @@
 {
   "name": "wyrm-engine",
+  "homepage": "https://github.com/SirWojtek/wyrm-engine",
+  "email": "momatoku@gmail.com",
   "version": "1.0.0",
   "main": "./bundles/index.umd.js",
   "module": "./dist/esm5/index.js",
   "typings": "./dist/types/index.d.ts",
-  "repository": "git@github.com:SirWojtek/wyrm-engine.git",
+  "repository": "https://github.com/SirWojtek/wyrm-engine.git",
   "author": "SirWojtek",
   "license": "MIT",
   "scripts": {
