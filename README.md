@@ -394,6 +394,9 @@ wyrmEngine.createEncounter([ kyle ], [ aiCharacter ]);
 ## Customising engine
 Work in progress :)
 
+## API docs
+[Docs](https://wyrm-engine-docs.s3.eu-central-1.amazonaws.com/index.html)
+
 ## Contact
 
 Email: momatoku@gmail.com
