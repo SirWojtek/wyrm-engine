@@ -90,6 +90,9 @@ npm install wyrm-engine
 yarn wyrm-engine
 ```
 
+## API docs
+API documentation is available here: [Docs](https://wyrm-engine-docs.s3.eu-central-1.amazonaws.com/index.html)
+
 ## Usage
 To create an ecounter, you first need to prepare battleground, which includes defining characters and sides of conflict.
 After obtaining the encounter object you control when is the right time to trigger next round.
@@ -393,9 +396,6 @@ wyrmEngine.createEncounter([ kyle ], [ aiCharacter ]);
 
 ## Customising engine
 Work in progress :)
-
-## API docs
-API documentation is available here: [Docs](https://wyrm-engine-docs.s3.eu-central-1.amazonaws.com/index.html)
 
 ## Contact
 
