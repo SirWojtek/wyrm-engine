@@ -80,6 +80,16 @@ Jenny is dead!
 teamA won the encounter!
 ```
 
+## Instalation
+### Via npm
+```
+npm install wyrm-engine
+```
+### Via yarn
+```
+yarn wyrm-engine
+```
+
 ## Usage
 To create an ecounter, you first need to prepare battleground, which includes defining characters and sides of conflict.
 After obtaining the encounter object you control when is the right time to trigger next round.
