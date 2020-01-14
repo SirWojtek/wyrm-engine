@@ -395,7 +395,7 @@ wyrmEngine.createEncounter([ kyle ], [ aiCharacter ]);
 Work in progress :)
 
 ## API docs
-[Docs](https://wyrm-engine-docs.s3.eu-central-1.amazonaws.com/index.html)
+API documentation is available here: [Docs](https://wyrm-engine-docs.s3.eu-central-1.amazonaws.com/index.html)
 
 ## Contact
 
