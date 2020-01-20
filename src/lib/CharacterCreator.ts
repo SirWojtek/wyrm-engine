@@ -168,7 +168,7 @@ export class CharacterCreator {
     const maxDamage = this.getMaxDamage(data.level, subtype);
     const minDamage = round(maxDamage * this.minDamageModifier);
     const armor = this.getArmor(data.level, subtype);
-    const statsSum = data.level * this.engineConfig.statPointsPerLevel;
+    const statsSum = this.getStatsPointsSum(data.level);
 
     return {
       damage: { min: minDamage, max: maxDamage },
@@ -199,12 +199,12 @@ export class CharacterCreator {
     return round(stats.stamina * maxHpModifier);
   }
 
-  getMaxDamage(level: number, subtype: CharacterSubtypeEnum): number {
+  getMaxDamage(level: number, subtype?: CharacterSubtypeEnum): number {
     const { damageConfig } = this.engineConfig;
     const baseDmg =
       damageConfig.startDamage + level * damageConfig.damagePerLevel;
 
-    switch (subtype) {
+    switch (subtype || CharacterSubtypeEnum.Balanced) {
       case CharacterSubtypeEnum.Attacker:
         return round(this.subtypeModifiers.good * baseDmg);
       case CharacterSubtypeEnum.Balanced:
@@ -216,13 +216,13 @@ export class CharacterCreator {
     }
   }
 
-  getArmor(level: number, subtype: CharacterSubtypeEnum): number {
+  getArmor(level: number, subtype?: CharacterSubtypeEnum): number {
     const { armorConfig } = this.engineConfig;
     const baseArmor = round(
       armorConfig.startArmor + level * armorConfig.armorPerLevel,
     );
 
-    switch (subtype) {
+    switch (subtype || CharacterSubtypeEnum.Balanced) {
       case CharacterSubtypeEnum.Attacker:
         return round(this.subtypeModifiers.bad * baseArmor);
       case CharacterSubtypeEnum.Balanced:
@@ -232,5 +232,9 @@ export class CharacterCreator {
       default:
         throw Error('Unknown enum value');
     }
+  }
+
+  getStatsPointsSum(level: number): number {
+    return level * this.engineConfig.statPointsPerLevel;
   }
 }

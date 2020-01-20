@@ -4,10 +4,10 @@
 ![npm](https://img.shields.io/npm/v/wyrm-engine)
 
 
-wyrm-engine is fully typed game engine library which is designed to simulate battles between in-game characters.
-The main goal of wyrm-engine is to abstract the battle logic from the rest of the game, which makes it usable
-for wide pick of virtual worlds, from fantasy to sci-fi. To achieve that, wyrm-engine is using generic parameters
-to define sites of battle with keeping the usage as simple as possible.
+wyrm-engine is fully typed game engine library designed to simulate battles between in-game characters.
+The main goal of wyrm-engine is to abstract the battle logic from the rest of the game, which makes it applicable
+for a wide variety of virtual worlds from fantasy to science fiction. To achieve that, wyrm-engine uses generic parameters
+to define battle sites, whilst keeping the API usage as simple as possible.
 
 wyrm-engine main features:
 * fully-typed, fully-written in Typescript,
@@ -42,7 +42,7 @@ const teamB = [jenny];
 const encounter = wyrmEngine.createEncounter(teamA, teamB);
 
 while (encounter.tick()) {
-  // battle!
+  // battle! (see Ticks for more info)
 }
 
 // print battle logs in human readable way
@@ -50,7 +50,7 @@ const logs = encounter.getEncounterLogs();
 logs.forEach(l => console.log(l.message));
 ```
 
-...and here is the example output:
+Which produces the following output:
 ```
 === Encounter summary ===
 Round: 1
@@ -91,26 +91,26 @@ yarn wyrm-engine
 ```
 
 ## API docs
-API documentation is available here: [Docs](https://wyrm-engine-docs.s3.eu-central-1.amazonaws.com/index.html)
+[API documentation is available here.](https://wyrm-engine-docs.s3.eu-central-1.amazonaws.com/index.html)
 
 ## Usage
-To create an ecounter, you first need to prepare battleground, which includes defining characters and sides of conflict.
-After obtaining the encounter object you control when is the right time to trigger next round.
+To create an ecounter, you start with praparing battleground, which includes defining characters and factions.
+Once you've created the encounter object, you can then control when to trigger the next round.
 
-The outcome of using wyrm-engine are events (messages) produces during the battle simulation.
+wyrm-engine produces envets (messages) during tthe battle simulation.
 They can be used to inform game users about the current state of encounter so they can decide about their next steps.
 Output from the engine can also be used to update game internal state, for example HP of game characters.
 
 ### Creating engine
-The first step is to create wyrm-engine instance, which can be done in this way:
+The first step is to create wyrm-engine instance, which can be done by:
 ```typescript
 import { createEngine } from 'wyrm-engine';
 
 const wyrmEngine = createEngine();
 ```
 
-The engine instance created using `createEngine` is configured to use the default engine parameters,
-tuned to give balanced chance to win for characters on the same level with different sets of stats.
+The engine instance created using `createEngine` is configured to use the default engine parameters which are
+balanced to provide an equal chance of winning for characters with the same level.
 For more details about creating engine with custom parameters, see the [Customising Engine](#customising-engine) section.
 
 ### Modeling characters
@@ -122,7 +122,7 @@ const characterCreator = wyrmEngine.getCharacterCreator();
 
 #### `CharacterCreator.createCharacter`
 This method is the simplest way of creating a character.
-It automates stats generationm, provides actions and AI logic.
+It automates stats generation, provides actions and AI logic.
 
 ```typescript
 // creates AI character using predefined template
@@ -149,8 +149,8 @@ const jenny: ICharacter = characterCreator.createCharacter({
 |:-------------------:|---------------------------------------------------------------------------------------------------------------------------------|
 | `name`              | (optional) A human-readable name of a character, will be used in battle event messages                                          |
 | `level`             | Defines general battle proficiency, higher level means more stats points to distribute                                          |
-| `type`              | Allows to choose a stats profile. Available values are:<br>`Strong` - prioritise adding stats points to power <br>`Swift` - prioritise adding stats points to dexterity<br>`Tought` - prioritise adding stats points to stamina<br>For more info about stats (attributes) see [Stats description](#stats-description)                                              |
-| `subtype`           | (optional) Customize damage / armor profile. Available values are:<br>`Attacker` - prioritise character damage over armor<br>`Balanced` - balance damage and armor<br>`Defender` - prioritise character armor over damage<br>The default value is `Balanced`. For more info check [Damage and armor](#damage-and-armor)                                      |
+| `type`              | Allows to choose a stats profile. Available values are:<br>`Strong` - prioritise adding stats points to power <br>`Swift` - prioritise adding stats points to dexterity<br>`Tought` - prioritise adding stats points to stamina<br>For more info about stats (attributes) see [Stats description](#stats-description) |
+| `subtype`           | (optional) Customize damage / armor profile. Available values are:<br>`Attacker` - prioritise character damage over armor<br>`Balanced` - balance damage and armor<br>`Defender` - prioritise character armor over damage<br>The default value is `Balanced`. For more info check [Damage and armor](#damage-and-armor) |
 | `autoControl`       | (optional) Should the AI controller be generated for the charater?                                                              |
 | `overrideCharacter` | (optional) Specify character properties defined in [Character model description](#character-model-description) to override them |
 
@@ -196,6 +196,25 @@ const kyle: ICharacter = {
 };
 ```
 
+You can also decide to manually distribute stat points:
+```typescript
+const statsSum = characterCreator.getStatsPointsSum(level);
+const maxDamage = characterCreator.getMaxDamage(level);
+// manually defined minimum damage
+const minDamage = 0.8 * maxDamage;
+// armor for tanks
+const armor = characterCreator.getArmor(level, CharacterSubtypeEnum.Defender);
+
+// now our character is ready to take some damage
+const stats: IStats = {
+  damage: { min: minDamage, max: maxDamage },
+  armor,
+  power: statsSum * 0.2,
+  dexterity: statsSum * 0.2,
+  stamina: statsSum * 0.6
+};
+```
+
 #### Character model description
 The character model (`ICharacter`) used in wyrm-engine includes the folowing parameters:
 
@@ -210,7 +229,7 @@ The character model (`ICharacter`) used in wyrm-engine includes the folowing par
 | `actions`		| an array of moves which can be performed during a battle, see [Actions](#actions) for more details							|
 | `controllerCallback`	| a function which will be invoked before each round to determine which action should be chosed, see [Controling characters](#controling-characters)	|
 
-#### Stats
+#### Stats description
 Stats describes attributes which define battle abilities of characters. Each attribute is responsible for the different set of skills:
 
 ##### Damage
@@ -220,16 +239,71 @@ Stats describes attributes which define battle abilities of characters. Each att
 * defines damage reduction, can be sum of armor values from character equipment
 
 ##### Power
-* bonus damage for each hit
+* bonus damage for each hit (attack power)
 * higher values means better armor penetration, used to calculate damage reduction
 
 ##### Dexterity
-* better chance to hit the target
+* better chance to hit the target (hit rating)
 * higher probability to dodge an attack
 * more chance to attack before opponent in round
 
 ##### Stamina
 * more hit points
+
+#### Formulas
+Each of the above attributes are converted to internal stats used during battles.
+Here are equations responsible for calculating battle events:
+
+**Initiative (dexterity)** - higher initiative gives more chance to be higher in round order hierarchy.
+```
+// pseudo-code of determining round order
+
+while (charactersLeft.length > 0) {
+  sum = sum(charactersLeft.initiative)
+  randomNumber = random(1, sum)
+  counter = 0
+
+  charactersLeft.forEach(characterLeft => {
+    counter += characterLeft.initiative
+
+    if (randomNumber < counter) {
+      roundOrder.push(characterLeft)
+      charactersLeft.remove(characterLeft)
+      break
+    }
+  });
+}
+```
+**Hit rating (dexterity)** - defines chance to hit the opponent
+```
+sum = sum(hitRating + opponentDodge)
+randomNumber = random(0, sum)
+missed = randomNumber >= hitRating
+```
+**Dodge (dexterity)** - used against hit rating to determine if attack misses
+```
+sum = sum(hitRating + opponentDodge)
+randomNumber = random(0, sum)
+missed = randomNumber >= hitRating
+```
+**Armor Penetration (power)** - gives oportunity do bypass the opponent's armor
+```
+armorPenetrationRatio = armorPenetration / (armorPenetration + opponentDamageReduction)
+damageDone = armorPenetrationRatio * baseDamage + attackPower
+```
+**Damage Reduction (armor)** - indicates how much damage is absorbed by equipment
+```
+armorPenetrationRatio = opponentArmorPenetration / (opponentArmorPenetration + damageReduction)
+damageTaken = armorPenetrationRatio * opponentBaseDamage + opponentAttackPower
+```
+**Damage (damage)** - base damage of all attacks
+```
+damageDone = armorPenetrationRatio * baseDamage + attackPower
+```
+**Attack Power (power)** - determines the bonus damage on hit.
+```
+damageDone = armorPenetrationRatio * baseDamage + attackPower
+```
 
 #### Actions
 Each character should have at least one action defined to be capable to fight during an encounter.
