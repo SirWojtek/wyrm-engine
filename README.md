@@ -468,6 +468,19 @@ const aiCharacter = characterCreator.createCharacter({
 wyrmEngine.createEncounter([ kyle ], [ aiCharacter ]);
 ```
 
+#### Encounter state
+It is possible to obtain/load the encounter's state via `getState` and `loadState` functions.
+Please note that state does not include callbacks defined during creation of encounter.
+Those can be re-added during load:
+
+```typescript
+const state = encounter.getState();
+encounter.loadState({
+  ...state,
+  logMessageCallback: console.log
+})
+```
+
 ## Customising engine
 Work in progress :)
 
