@@ -10,7 +10,6 @@ import {
 } from 'lodash';
 import { IEngineCharacter } from '.';
 import { IAction } from './interfaces/IAction';
-import { ICharacterState } from './interfaces/ICharacterState';
 import { IEncounterConfig } from './interfaces/IEncounterConfig';
 import {
   IEcounterLog,
@@ -192,10 +191,10 @@ export class Encounter {
    * @returns state of encounter containing teams
    */
   getState(): IEncounterState {
-    const teamA: ICharacterState[] = this.encounterConfig.teamA
+    const teamA = this.encounterConfig.teamA
       .map(character => omit(character, 'controllerCallback'))
       .map(cloneDeep);
-    const teamB: ICharacterState[] = this.encounterConfig.teamB
+    const teamB = this.encounterConfig.teamB
       .map(character => omit(character, 'controllerCallback'))
       .map(cloneDeep);
 
