@@ -52,7 +52,8 @@ export default {
           'groupBy',
           'merge',
           'round',
-          'cloneDeep'
+          'cloneDeep',
+          'omit'
         ]
       }
     }),

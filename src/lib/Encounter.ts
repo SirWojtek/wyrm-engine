@@ -1,4 +1,13 @@
-import { groupBy, random, remove, round, sortBy, sumBy } from 'lodash';
+import {
+  cloneDeep,
+  groupBy,
+  omit,
+  random,
+  remove,
+  round,
+  sortBy,
+  sumBy,
+} from 'lodash';
 import { IEngineCharacter } from '.';
 import { IAction } from './interfaces/IAction';
 import { IEncounterConfig } from './interfaces/IEncounterConfig';
@@ -7,6 +16,7 @@ import {
   IEncounterLogEntry,
   LogEntryTypeEnum,
 } from './interfaces/IEncounterLog';
+import { IEncounterState } from './interfaces/IEncounterState';
 import { TeamEnum } from './interfaces/TeamEnum';
 import {
   deathMessage,
@@ -174,6 +184,33 @@ export class Encounter {
    */
   getEncounterLogs(): IEcounterLog {
     return this.encunterLog;
+  }
+
+  /**
+   * Gets encounter's state
+   * @returns state of encounter containing teams
+   */
+  getState(): IEncounterState {
+    const teamA = this.encounterConfig.teamA
+      .map(character => omit(character, 'controllerCallback'))
+      .map(cloneDeep);
+    const teamB = this.encounterConfig.teamB
+      .map(character => omit(character, 'controllerCallback'))
+      .map(cloneDeep);
+
+    return {
+      id: this.encounterConfig.id,
+      teamA,
+      teamB,
+    };
+  }
+
+  /**
+   * Restores encounter's state from snapshot
+   * @param state encounter snapshot, can be obtain using `getState()` function
+   */
+  loadState(state: IEncounterConfig) {
+    this.encounterConfig = cloneDeep(state);
   }
 
   private getRoundOrder(): IEngineCharacter[] {
