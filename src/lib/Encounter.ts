@@ -192,12 +192,12 @@ export class Encounter {
    * @returns state of encounter containing teams
    */
   getState(): IEncounterState {
-    const teamA: ICharacterState[] = this.encounterConfig.teamA.map(character =>
-      omit(character, 'controllerCallback'),
-    );
-    const teamB: ICharacterState[] = this.encounterConfig.teamB.map(character =>
-      omit(character, 'controllerCallback'),
-    );
+    const teamA: ICharacterState[] = this.encounterConfig.teamA
+      .map(character => omit(character, 'controllerCallback'))
+      .map(cloneDeep);
+    const teamB: ICharacterState[] = this.encounterConfig.teamB
+      .map(character => omit(character, 'controllerCallback'))
+      .map(cloneDeep);
 
     return {
       id: this.encounterConfig.id,
