@@ -1,4 +1,4 @@
-import { ICharacterState } from './ICharacterState';
+import { IEngineCharacter } from './IEngineCharacter';
 
 export interface IEncounterState {
   /**
@@ -8,9 +8,10 @@ export interface IEncounterState {
   /**
    * first of team forming members who take places in encounter
    */
-  teamA: ICharacterState[];
+  teamA: Array<Omit<IEngineCharacter, 'controllerCallback'>>;
+
   /**
    * second of team forming members who take places in encounter
    */
-  teamB: ICharacterState[];
+  teamB: Array<Omit<IEngineCharacter, 'controllerCallback'>>;
 }
