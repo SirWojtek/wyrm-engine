@@ -10,7 +10,8 @@
     "sourceMap": true,
     "declarationDir": "dist/types",
     "outDir": "dist/esm5",
-    "incremental": true
+    "incremental": true,
+    "esModuleInterop":true
   },
   "include": [
     "src/lib/**/*.ts"

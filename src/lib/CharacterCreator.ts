@@ -1,4 +1,4 @@
-import * as uuid from 'uuid-random';
+import uuid from 'uuid-random';
 
 import { cloneDeep, round } from 'lodash';
 import { IAction } from './interfaces/IAction';

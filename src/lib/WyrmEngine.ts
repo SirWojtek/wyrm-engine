@@ -1,4 +1,4 @@
-import * as uuid from 'uuid-random';
+import uuid from 'uuid-random';
 
 import { IEcounterLog, IEngineCharacter } from '.';
 import { CharacterCreator } from './CharacterCreator';
